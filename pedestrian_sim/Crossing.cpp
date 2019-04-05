@@ -58,20 +58,15 @@
 const float M_PI = 3.14159265358979323846f;
 #endif
 
-#define nLeft 10
+#define nLeft 5
+#define nRight 10
 int getThreLeft(int t, int hurry);
+int getThreRight(int t, int hurry);
 
 /* Store illegal crossing parameter. */
-int seqL[nLeft][2] = {{5,30}, {3,60}, {1,90}, {10,120}, {3,150}, {10,180}, {6,210}, {1,240}, {10,270}, {4,300}};
 int illegal = 0;
-struct waitL
-{
-	int hurry;
-	int app_time;
-	float app_x;
-	float app_y;
-	bool waiting;
-};
+int seqR[nRight][2] = {{5,30}, {3,60}, {1,90}, {10,120}, {3,150}, {10,180}, {6,210}, {1,240}, {10,270}, {4,300}};
+int seqL[nLeft][2] = {{5, 45}, {10, 105}, {1, 165}, {1, 225}, {6, 285}};
 float posL[][2] = {{-14.6, 3.1}, {-15.3, -4.0}, {-15.1, 4.6}, {-15.1, 1.9}, {-15.0, -2.0}, {-15.5, -0.7},
 									{-14.4, 0.6}, {-14.3, -3.2}, {-15.3, 3.0}, {-14.3, 2.1}, {-14.8, 4.0}, {-14.6, -1.0},
 									{-15.4, 0.4}, {-14.2, -0.1}, {-16.0, 1.1}, {-16.3, -2.5}, {-15.6, -3.1}, {-16.5, -3.1},
@@ -80,7 +75,30 @@ float posL[][2] = {{-14.6, 3.1}, {-15.3, -4.0}, {-15.1, 4.6}, {-15.1, 1.9}, {-15
 									{-16.6, 0.4}, {-16.8, 4.3}, {-15.1, -8.0}, {-16.0, -6.2}, {-15.6, -2.4}, {-15.5, -5.4},
 									{-16.7, 6.0}, {-15.6, 7.9}, {-16.7, -6.4}, {-14.4, -8.4}, {-16.8, -4.5}, {-16.4, -5.3},
 									{-16.3, 7.1}, {-17.0, 1.7}, {-14.7, 8.0}, {-16.2, -8.1}, {-17.4, 5.7}, {-17.1, -5.2}};
-
+float posR[][2] = {{10.4, -3.1}, {11.1, 4.0}, {10.9, -4.6}, {10.9, -1.9}, {10.8, 2.0}, {11.3, 0.7},
+									{10.2, -0.6}, {10.1, 3.2}, {11.1, -3.0}, {10.1, -2.1}, {10.6, -4.0}, {10.4, 1.0},
+									{11.2, -0.4}, {10.0, 0.1}, {11.8, -1.1}, {12.1, 2.5}, {11.4, 3.1}, {12.3, 3.1},
+									{10.5, -5.5}, {11.9, 3.7}, {11.6, -2.3}, {11.7, -4.0}, {12.0, 0.1}, {10.7, 5.5},
+									{10.5, 4.5}, {10.7, 7.1}, {10.9, -7.2}, {10.0, -5.9}, {10.2, 6.7}, {10.9, -6.1},
+									{12.4, -0.4}, {12.6, -4.3}, {10.9, 8.0}, {11.8, 6.2}, {11.4, 2.4}, {11.3, 5.4},
+									{12.5, -6.0}, {11.4, -7.9}, {12.5, 6.4}, {10.2, 8.4}, {12.6, 4.5}, {12.2, 5.3},
+									{12.1, -7.1}, {12.8, -1.7}, {10.5, -8.0}, {12.0, 8.1}, {13.2, -5.7}, {12.9, 5.2}};
+struct waitL
+{
+	int hurry;
+	int app_time;
+	float app_x;
+	float app_y;
+	bool waiting;
+};
+struct waitR
+{
+	int hurry;
+	int app_time;
+	float app_x;
+	float app_y;
+	bool waiting;
+};
 
 /* Store the goals of the agents. */
 std::vector<RVO::Vector2> goals;
@@ -134,15 +152,17 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
-	// if (sim->getGlobalTime() == 30.0f) {
-	// 	goals[1] = RVO::Vector2(9.9f, -5.0f);
-	// }
+	// init waiting agent structure
 	struct waitL wait_left[nLeft];
+	struct waitR wait_right[nRight];
 	for(int i = 0; i < nLeft; i++) {
 		wait_left[i].waiting = false;
 	}
+	for(int i = 0; i < nRight; i++) {
+		wait_right[i].waiting = false;
+	}
+	// agents appears and waiting - left
 	for(int i = 0; i < sizeof(seqL)/sizeof(*seqL); i++) {
-		// agents appears and waiting
 		if (sim->getGlobalTime() == seqL[i][1]) {
 			int p = 0;
 			bool occupy = true;
@@ -165,7 +185,31 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			wait_left[i].waiting = true;
 		}
 	}
-	// chech waiting agents whether run the light
+	// agents appears and waiting - right
+	for(int i = 0; i < sizeof(seqR)/sizeof(*seqR); i++) {
+		if (sim->getGlobalTime() == seqR[i][1]) {
+			int p = 0;
+			bool occupy = true;
+			// unoccupied position with highest priority is assigned to new agent
+			while (occupy == true && p < sizeof(posR)/sizeof(*posR)) {
+				occupy = false;
+				for (size_t k = 0; k < sim->getNumAgents(); k++) {
+					if (sim->getAgentPosition(k).x() == posR[p][0] && sim->getAgentPosition(k).y() == posR[p][1]) {
+						occupy = true;
+					}
+				}
+				if (occupy == true) { p++; }
+			}
+			sim->addAgent(RVO::Vector2(posR[p][0], posR[p][1]));
+			goals.push_back(RVO::Vector2(posR[p][0], posR[p][1]));
+			wait_right[i].hurry = seqR[i][0];
+			wait_right[i].app_time = seqR[i][1];
+			wait_right[i].app_x = posR[p][0];
+			wait_right[i].app_y = posR[p][1];
+			wait_right[i].waiting = true;
+		}
+	}
+	// chech waiting agents whether run the light - left
 	for (int i = 0; i < nLeft; i++) {
 		if (wait_left[i].waiting == true) {
 			if (illegal >= getThreLeft(sim->getGlobalTime() - wait_left[i].app_time, wait_left[i].hurry)) {
@@ -175,6 +219,21 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 					}
 				}
 				illegal++;
+				wait_left[i].waiting = false;
+			}
+		}
+	}
+	// chech waiting agents whether run the light - right
+	for (int i = 0; i < nRight; i++) {
+		if (wait_right[i].waiting == true) {
+			if (illegal >= getThreRight(sim->getGlobalTime() - wait_right[i].app_time, wait_right[i].hurry)) {
+				for (size_t k = 0; k < sim->getNumAgents(); k++) {
+					if (sim->getAgentPosition(k).x() == wait_right[i].app_x && sim->getAgentPosition(k).y() == wait_right[i].app_y) {
+						goals[k] = RVO::Vector2(-14.1f, 0.0f);
+					}
+				}
+				illegal++;
+				wait_right[i].waiting = false;
 			}
 		}
 	}
@@ -377,7 +436,7 @@ bool reachedGoal(RVO::RVOSimulator *sim)
 
 bool timeUp(RVO::RVOSimulator *sim)
 {
-	return sim->getGlobalTime() > 1000.0f;
+	return sim->getGlobalTime() > 1500.0f;
 }
 
 int main()
