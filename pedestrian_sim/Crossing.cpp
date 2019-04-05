@@ -185,6 +185,101 @@ int getThreLeft(int t, int hurry) {
 	if (t == 30 * 0) {
 		switch (hurry)
 		{
+			case 0: return 50;
+			case 1: return 35;
+			case 2: return 25;
+			case 3: return 16;
+			case 4: return 10;
+			case 5: return 7;
+			case 6: return 4;
+			case 7: return 2;
+			case 8: return 1;
+			case 9: return 1;
+			default: return 0;
+		}
+	} else if (t == 30 * 1) {
+		switch (hurry)
+		{
+			case 0: return 35;
+			case 1: return 22;
+			case 2: return 16;
+			case 3: return 9;
+			case 4: return 6;
+			case 5: return 4;
+			case 6: return 2;
+			case 7: return 1;
+			case 8: return 1;
+			default: return 0;
+		}
+	} else if (t == 30 * 2) {
+		switch (hurry)
+		{
+			case 0: return 25;
+			case 1: return 17;
+			case 2: return 11;
+			case 3: return 7;
+			case 4: return 4;
+			case 5: return 2;
+			case 6: return 1;
+			default: return 0;
+		} 
+	} else if (t == 30 * 3) {
+		switch (hurry)
+		{
+			case 0: return 22;
+			case 1: return 14;
+			case 2: return 9;
+			case 3: return 6;
+			case 4: return 2;
+			case 5: return 1;
+			default: return 0;
+		}
+	} else if (t == 30 * 4) {
+		switch (hurry)
+		{
+			case 0: return 19;
+			case 1: return 12;
+			case 2: return 7;
+			case 3: return 5;
+			case 4: return 2;
+			default: return 0;
+		}
+	} else if (t == 30 * 5) {
+		switch (hurry)
+		{
+			case 0: return 15;
+			case 1: return 9;
+			case 2: return 5;
+			case 3: return 4;
+			case 4: return 1;
+			default: return 0;
+		}
+	} else if (t == 30 * 6) {
+		switch (hurry)
+		{
+			case 0: return 12;
+			case 1: return 8;
+			case 2: return 3;
+			case 3: return 2;
+			default: return 0;
+		}
+	} else if (t == 30 * 7) {
+		switch (hurry)
+		{
+			case 0: return 10;
+			case 1: return 7;
+			case 2: return 2;
+			case 3: return 1;
+			default: return 0;
+		}
+	}
+	return 1000;
+}
+
+int getThreRight(int t, int hurry) {
+	if (t == 30 * 0) {
+		switch (hurry)
+		{
 			case 0: return 40;
 			case 1: return 25;
 			case 2: return 20;
