@@ -64,7 +64,8 @@ int getThreLeft(int t, int hurry);
 int getThreRight(int t, int hurry);
 
 /* Store illegal crossing parameter. */
-int illegal = 0;
+int illegalR = 0;
+int illegalL = 0;
 int seqR[nRight][2] = {{5,30}, {3,60}, {1,90}, {10,120}, {3,150}, {10,180}, {6,210}, {1,240}, {10,270}, {4,300}};
 int seqL[nLeft][2] = {{5, 45}, {10, 105}, {1, 165}, {1, 225}, {6, 285}};
 float posL[][2] = {{-14.6, 3.1}, {-15.3, -4.0}, {-15.1, 4.6}, {-15.1, 1.9}, {-15.0, -2.0}, {-15.5, -0.7},
@@ -99,6 +100,9 @@ struct waitR
 	float app_y;
 	bool waiting;
 };
+/* init waiting agent structure. */
+struct waitL wait_left[nLeft];
+struct waitR wait_right[nRight];
 
 /* Store the goals of the agents. */
 std::vector<RVO::Vector2> goals;
@@ -110,6 +114,14 @@ void setupScenario(RVO::RVOSimulator *sim)
 
 	/* neighborDist, maxNeighbors, timeHorizon, timeHorizonObst, radius, maxSpeed */
 	sim->setAgentDefaults(10.0f, 5, 0.1f, 0.1f, 0.3f, 0.09f);
+
+	/* Init with all agents as not waiting. */
+	for(int i = 0; i < nLeft; i++) {
+		wait_left[i].waiting = false;
+	}
+	for(int i = 0; i < nRight; i++) {
+		wait_right[i].waiting = false;
+	}
 }
 
 #if RVO_OUTPUT_TIME_AND_POSITIONS
@@ -152,15 +164,6 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
-	// init waiting agent structure
-	struct waitL wait_left[nLeft];
-	struct waitR wait_right[nRight];
-	for(int i = 0; i < nLeft; i++) {
-		wait_left[i].waiting = false;
-	}
-	for(int i = 0; i < nRight; i++) {
-		wait_right[i].waiting = false;
-	}
 	// agents appears and waiting - left
 	for(int i = 0; i < sizeof(seqL)/sizeof(*seqL); i++) {
 		if (sim->getGlobalTime() == seqL[i][1]) {
@@ -209,16 +212,17 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			wait_right[i].waiting = true;
 		}
 	}
+
 	// chech waiting agents whether run the light - left
 	for (int i = 0; i < nLeft; i++) {
 		if (wait_left[i].waiting == true) {
-			if (illegal >= getThreLeft(sim->getGlobalTime() - wait_left[i].app_time, wait_left[i].hurry)) {
+			if (illegalR + illegalL >= getThreLeft(sim->getGlobalTime() - wait_left[i].app_time, wait_left[i].hurry)) {
 				for (size_t k = 0; k < sim->getNumAgents(); k++) {
 					if (sim->getAgentPosition(k).x() == wait_left[i].app_x && sim->getAgentPosition(k).y() == wait_left[i].app_y) {
 						goals[k] = RVO::Vector2(9.9f, 0.0f);
 					}
 				}
-				illegal++;
+				illegalL++;
 				wait_left[i].waiting = false;
 			}
 		}
@@ -226,13 +230,13 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 	// chech waiting agents whether run the light - right
 	for (int i = 0; i < nRight; i++) {
 		if (wait_right[i].waiting == true) {
-			if (illegal >= getThreRight(sim->getGlobalTime() - wait_right[i].app_time, wait_right[i].hurry)) {
+			if (illegalR + illegalL >= getThreRight(sim->getGlobalTime() - wait_right[i].app_time, wait_right[i].hurry)) {
 				for (size_t k = 0; k < sim->getNumAgents(); k++) {
 					if (sim->getAgentPosition(k).x() == wait_right[i].app_x && sim->getAgentPosition(k).y() == wait_right[i].app_y) {
 						goals[k] = RVO::Vector2(-14.1f, 0.0f);
 					}
 				}
-				illegal++;
+				illegalR++;
 				wait_right[i].waiting = false;
 			}
 		}
@@ -436,7 +440,7 @@ bool reachedGoal(RVO::RVOSimulator *sim)
 
 bool timeUp(RVO::RVOSimulator *sim)
 {
-	return sim->getGlobalTime() > 1500.0f;
+	return sim->getGlobalTime() > 2000.0f;
 }
 
 int main()
