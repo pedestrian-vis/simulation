@@ -60,6 +60,8 @@ const float M_PI = 3.14159265358979323846f;
 
 #define nLeft 15
 #define nRight 30
+int posRange = 30;
+int posMin = 0;
 int getThreLeft(int t, int hurry);
 int getThreRight(int t, int hurry);
 
@@ -73,6 +75,7 @@ int seqR[nRight][2] = {{8, 0}, {7, 30}, {6, 60}, {1, 90}, {8, 120}, {3, 150}, {2
 					{2, 600}, {5, 630}, {1, 660}, {5, 690}, {1, 720}, {5, 750}, {4, 780}, {4, 810}, {8, 840}, {10, 870}};
 int seqL[nLeft][2] = {{8, 45}, {4, 105}, {1, 165}, {10, 225}, {8, 285}, {1, 345}, {9, 405}, {4, 465}, {5, 525}, {2, 585},
 					{2, 645}, {1, 705}, {4, 765}, {1, 825}, {7, 885}};
+// store the priority of initial waiting positions
 float posL[][2] = {{-14.6, 3.1}, {-15.3, -4.0}, {-15.1, 4.6}, {-15.1, 1.9}, {-15.0, -2.0}, {-15.5, -0.7},
 					{-14.4, 0.6}, {-14.3, -3.2}, {-15.3, 3.0}, {-14.3, 2.1}, {-14.8, 4.0}, {-14.6, -1.0},
 					{-15.4, 0.4}, {-14.2, -0.1}, {-16.0, 1.1}, {-16.3, -2.5}, {-15.6, -3.1}, {-16.5, -3.1},
@@ -213,9 +216,28 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 	// agents appears and waiting - left
 	for(int i = 0; i < sizeof(seqL)/sizeof(*seqL); i++) {
 		if (sim->getGlobalTime() == seqL[i][1]) {
-			int p = 0;
+			// check whether the first 30 are all occupied
+			bool first_30_occupy = true;
+			for (int j = 0; j < 30; j++) {
+				bool this_occupy = false;
+				for (size_t k = 0; k < sim->getNumAgents(); k++) {
+					if (sim->getAgentPosition(k).x() == posL[j][0] && sim->getAgentPosition(k).y() == posL[j][1]) {
+						this_occupy = true;
+					}
+				}
+				if (!this_occupy) {
+					first_30_occupy = false;
+					break;
+				}
+			}
+			// if all occupied, the range of ramdom generated position index changes
+			if (first_30_occupy) {
+				posRange = 18;
+				posMin = 30;
+			}
+			// unoccupied position assigned to a new agent
+			int p = rand() % posRange + posMin;
 			bool occupy = true;
-			// unoccupied position with highest priority is assigned to new agent
 			while (occupy == true && p < sizeof(posL)/sizeof(*posL)) {
 				occupy = false;
 				for (size_t k = 0; k < sim->getNumAgents(); k++) {
@@ -223,7 +245,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 						occupy = true;
 					}
 				}
-				if (occupy == true) { p++; }
+				if (occupy == true) { p = rand() % posRange + posMin; }
 			}
 			// goals position the same as origin - waiting
 			sim->addAgent(RVO::Vector2(posL[p][0], posL[p][1]));
@@ -238,9 +260,28 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 	// agents appears and waiting - right
 	for (int i = 0; i < sizeof(seqR)/sizeof(*seqR); i++) {
 		if (sim->getGlobalTime() == seqR[i][1]) {
-			int p = 0;
+			// check whether the first 30 are all occupied
+			bool first_30_occupy = true;
+			for (int j = 0; j < 30; j++) {
+				bool this_occupy = false;
+				for (size_t k = 0; k < sim->getNumAgents(); k++) {
+					if (sim->getAgentPosition(k).x() == posL[j][0] && sim->getAgentPosition(k).y() == posL[j][1]) {
+						this_occupy = true;
+					}
+				}
+				if (!this_occupy) {
+					first_30_occupy = false;
+					break;
+				}
+			}
+			// if all occupied, the range of ramdom generated position index changes
+			if (first_30_occupy) {
+				posRange = 18;
+				posMin = 30;
+			}
+			// unoccupied position assigned to a new agent
+			int p = rand() % posRange + posMin;
 			bool occupy = true;
-			// unoccupied position with highest priority is assigned to new agent
 			while (occupy == true && p < sizeof(posR)/sizeof(*posR)) {
 				occupy = false;
 				for (size_t k = 0; k < sim->getNumAgents(); k++) {
@@ -248,7 +289,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 						occupy = true;
 					}
 				}
-				if (occupy == true) { p++; }
+				if (occupy == true) { p = rand() % posRange + posMin; }
 			}
 			// goals position the same as origin - waiting
 			sim->addAgent(RVO::Vector2(posR[p][0], posR[p][1]));
