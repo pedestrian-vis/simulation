@@ -307,8 +307,12 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				if (i != j && goals[i].x() == sim->getAgentPosition(j).x() && goals[i].y() == sim->getAgentPosition(j).y()) {
 					for (int m = 0; m < 42; m++) {
 						if (goals[i].x() == buff_sort[m][0] && goals[i].y() == buff_sort[m][1]) {
-							if (m>0) {
-								goals[i] = RVO::Vector2(buff_sort[m-1][0], buff_sort[m-1][1]);
+							if (rand() % 2 == 0) {
+								if (m<41) {goals[i] = RVO::Vector2(buff_sort[m+1][0], buff_sort[m+1][1]);}
+								else {goals[i] = RVO::Vector2(buff_sort[m-1][0], buff_sort[m-1][1]);}
+							} else {
+								if (m>0) {goals[i] = RVO::Vector2(buff_sort[m-1][0], buff_sort[m-1][1]);}
+								else {goals[i] = RVO::Vector2(buff_sort[m+1][0], buff_sort[m+1][1]);}
 							}
 						}
 					}
