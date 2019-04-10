@@ -304,7 +304,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 
 	// chech waiting agents whether run the light - left
 	for (int i = 0; i < nLeft; i++) {
-		if (wait_left[i].waiting == true) {
+		if ((wait_left[i].waiting == true && (sim->getGlobalTime() < 460))) {
 			if (illegalR + illegalL >= getThreLeft(sim->getGlobalTime() - wait_left[i].app_time, wait_left[i].hurry)) {
 				for (size_t k = 0; k < sim->getNumAgents(); k++) {
 					if (sim->getAgentPosition(k).x() == wait_left[i].app_x && sim->getAgentPosition(k).y() == wait_left[i].app_y) {
@@ -323,11 +323,12 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 	}
 	// chech waiting agents whether run the light - right
 	for (int i = 0; i < nRight; i++) {
-		if (wait_right[i].waiting == true) {
+		if ((wait_right[i].waiting == true) && (
+			(sim->getGlobalTime() < 210) ||
+			(sim->getGlobalTime() > 540 && sim->getGlobalTime() < 810))) {
 			if (illegalR + illegalL >= getThreRight(sim->getGlobalTime() - wait_right[i].app_time, wait_right[i].hurry)) {
 				for (size_t k = 0; k < sim->getNumAgents(); k++) {
 					if (sim->getAgentPosition(k).x() == wait_right[i].app_x && sim->getAgentPosition(k).y() == wait_right[i].app_y) {
-						// goals[k] = RVO::Vector2(-14.1f, 0.0f);
 						// goal at buffer set via the same index
 						for(int j = 0; j < sizeof(posR)/sizeof(*posR); j++) {
 							if (wait_right[i].app_x == posR[j][0] && wait_right[i].app_y == posR[j][1]) {
