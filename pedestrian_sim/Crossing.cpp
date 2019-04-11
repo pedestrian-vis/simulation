@@ -58,8 +58,8 @@
 const float M_PI = 3.14159265358979323846f;
 #endif
 
-#define nLeft 15
-#define nRight 30
+#define nLeft 50
+#define nRight 100
 int posRange = 30;
 int posMin = 0;
 int getThreLeft(int t, int hurry);
@@ -72,9 +72,20 @@ int illegalL = 0; // left road segment, including both directions
 // seqR, seqL format: {hurryLevel, timeAppear}
 int seqR[nRight][2] = {{8, 0}, {7, 30}, {6, 60}, {1, 90}, {8, 120}, {3, 150}, {2, 180}, {8, 210}, {4, 240}, {4, 270},
 					{9, 300}, {0, 330}, {5, 360}, {5, 390}, {6, 420}, {8, 450}, {7, 480}, {5, 510}, {0, 540}, {4, 570},
-					{2, 600}, {5, 630}, {1, 660}, {5, 690}, {1, 720}, {5, 750}, {4, 780}, {4, 810}, {8, 840}, {10, 870}};
+					{2, 600}, {5, 630}, {1, 660}, {5, 690}, {1, 720}, {5, 750}, {4, 780}, {4, 810}, {8, 840}, {10, 870},
+					{4, 900}, {7, 907}, {8, 915}, {9, 922}, {9, 930}, {9, 937}, {5, 945}, {10, 952}, {8, 960}, {1, 967},
+					{6, 975}, {4, 982}, {0, 990}, {1, 997}, {3, 1005}, {6, 1012}, {2, 1020}, {4, 1027}, {6, 1035}, {7, 1042},
+					{1, 1050}, {3, 1080}, {0, 1110}, {8, 1140}, {2, 1170}, {10, 1200}, {4, 1230}, {6, 1260}, {2, 1290}, {3, 1320},
+					{1, 1350}, {4, 1380}, {9, 1410}, {5, 1440}, {8, 1470}, {3, 1500}, {1, 1530}, {10, 1560}, {3, 1590}, {4, 1620},
+					{7, 1650}, {0, 1680}, {9, 1710}, {8, 1740}, {9, 1770}, {9, 1800}, {8, 1830}, {3, 1860}, {8, 1890}, {4, 1920},
+					{4, 1950}, {7, 1980}, {3, 2010}, {3, 2040}, {7, 2070}, {10, 2100}, {10, 2130}, {3, 2160}, {9, 2190}, {0, 2220},
+					{0, 2250}, {6, 2280}, {3, 2310}, {3, 2340}, {1, 2370}, {7, 2400}, {10, 2430}, {4, 2460}, {4, 2490}, {1, 2520}};
 int seqL[nLeft][2] = {{8, 45}, {4, 105}, {1, 165}, {10, 225}, {8, 285}, {1, 345}, {9, 405}, {4, 465}, {5, 525}, {2, 585},
-					{2, 645}, {1, 705}, {4, 765}, {1, 825}, {7, 885}};
+					{2, 645}, {1, 705}, {4, 765}, {1, 825}, {7, 885}, {8, 915}, {4, 930}, {2, 945}, {9, 960}, {5, 975},
+					{0, 990}, {7, 1005}, {9, 1020}, {3, 1035}, {6, 1050}, {3, 1095}, {2, 1155}, {2, 1215}, {7, 1275}, {1, 1335},
+					{0, 1395}, {1, 1455}, {10, 1515}, {3, 1575}, {6, 1635}, {4, 1695}, {9, 1755}, {6, 1815}, {6, 1875}, {3, 1935},
+					{5, 1995}, {10, 2055}, {5, 2115}, {2, 2175}, {7, 2235}, {7, 2295}, {4, 2355}, {7, 2415}, {7, 2475}, {8, 2535}};
+
 // store the priority of initial waiting positions
 float posL[][2] = {{-14.6, 3.1}, {-15.3, -4.0}, {-15.1, 4.6}, {-15.1, 1.9}, {-15.0, -2.0}, {-15.5, -0.7},
 					{-14.4, 0.6}, {-14.3, -3.2}, {-15.3, 3.0}, {-14.3, 2.1}, {-14.8, 4.0}, {-14.6, -1.0},
@@ -238,8 +249,9 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			bool first_30_occupy = true;
 			for (int j = 0; j < 30; j++) {
 				bool this_occupy = false;
-				for (size_t k = 0; k < sim->getNumAgents(); k++) {
-					if (sim->getAgentPosition(k).x() == posL[j][0] && sim->getAgentPosition(k).y() == posL[j][1]) {
+				for (int k = 0; k < nLeft; k++) {
+					if (agt_fromL[k].waitingL && goals[agt_fromL[k].sim_index].x() == posL[j][0] &&
+						goals[agt_fromL[k].sim_index].y() == posL[j][1]) {
 						this_occupy = true;
 					}
 				}
@@ -270,8 +282,12 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			agt_fromL[i].app_time = seqL[i][1];
 			agt_fromL[i].app_x = posL[p][0];
 			agt_fromL[i].app_y = posL[p][1];
+			// agt_fromL[i].buf_x = dirR_buf[p][0];
+			// agt_fromL[i].buf_y = dirR_buf[p][1];
+			// agt_fromL[i].goal_x = dirR_goal[p][0];
+			// agt_fromL[i].goal_y = dirR_goal[p][1];
 			agt_fromL[i].waitingL = true;
-			agt_fromL[i].sim_index = goals.size() - 1;
+			agt_fromL[i].sim_index = goals.size();
 			sim->addAgent(RVO::Vector2(agt_fromL[i].app_x, agt_fromL[i].app_y));
 			goals.push_back(RVO::Vector2(agt_fromL[i].app_x, agt_fromL[i].app_y));
 		}
@@ -283,8 +299,9 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			bool first_30_occupy = true;
 			for (int j = 0; j < 30; j++) {
 				bool this_occupy = false;
-				for (size_t k = 0; k < sim->getNumAgents(); k++) {
-					if (sim->getAgentPosition(k).x() == posL[j][0] && sim->getAgentPosition(k).y() == posL[j][1]) {
+				for (int k = 0; k < nRight; k++) {
+					if (agt_fromR[k].waitingR && goals[agt_fromR[k].sim_index].x() == posR[j][0] &&
+						goals[agt_fromR[k].sim_index].y() == posR[j][1]) {
 						this_occupy = true;
 					}
 				}
@@ -315,8 +332,12 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			agt_fromR[i].app_time = seqR[i][1];
 			agt_fromR[i].app_x = posR[p][0];
 			agt_fromR[i].app_y = posR[p][1];
+			// agt_fromR[i].buf_x = dirR_buf[p][0];
+			// agt_fromR[i].buf_y = dirR_buf[p][1];
+			// agt_fromR[i].goal_x = dirR_goal[p][0];
+			// agt_fromR[i].goal_y = dirR_goal[p][1];
 			agt_fromR[i].waitingR = true;
-			agt_fromR[i].sim_index = goals.size() - 1;
+			agt_fromR[i].sim_index = goals.size();
 			sim->addAgent(RVO::Vector2(agt_fromR[i].app_x, agt_fromR[i].app_y));
 			goals.push_back(RVO::Vector2(agt_fromR[i].app_x, agt_fromR[i].app_y));
 		}
@@ -326,6 +347,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 	for (int i = 0; i < nLeft; i++) {
 		if ((agt_fromL[i].waitingL == true && (sim->getGlobalTime() < 460))) {
 			if (illegalR + illegalL >= getThreLeft(sim->getGlobalTime() - agt_fromL[i].app_time, agt_fromL[i].hurry)) {
+				// goals[agt_fromL[i].sim_index] = RVO::Vector2(agt_fromL[i].buf_x, agt_fromL[i].buf_y);
 				for (size_t k = 0; k < sim->getNumAgents(); k++) {
 					if (sim->getAgentPosition(k).x() == agt_fromL[i].app_x && sim->getAgentPosition(k).y() == agt_fromL[i].app_y) {
 						// goal at buffer and final set via the same index
@@ -352,6 +374,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			(sim->getGlobalTime() < 210) ||
 			(sim->getGlobalTime() > 540 && sim->getGlobalTime() < 810))) {
 			if (illegalR + illegalL >= getThreRight(sim->getGlobalTime() - agt_fromR[i].app_time, agt_fromR[i].hurry)) {
+				// goals[agt_fromR[i].sim_index] = RVO::Vector2(agt_fromR[i].buf_x, agt_fromR[i].buf_y);
 				for (size_t k = 0; k < sim->getNumAgents(); k++) {
 					if (sim->getAgentPosition(k).x() == agt_fromR[i].app_x && sim->getAgentPosition(k).y() == agt_fromR[i].app_y) {
 						// goal at buffer and final set via the same index
@@ -488,6 +511,71 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				agt_fromL[i].waiting_buf = false;
 				agt_fromL[i].running_from_buf = true;
 			}
+		}
+	}
+
+	// LIGHT GREEN, all cross - from left
+	for (int i = 0; i < nLeft; i++) {
+		// the agents waiting at the left side
+		if ((agt_fromL[i].waitingL) && (sim->getGlobalTime() > 1800)) {
+			for (int j = 0; j < sizeof(posL)/sizeof(*posL); j++) {
+				if (agt_fromL[i].app_x == posL[j][0] && agt_fromL[i].app_y == posL[j][1]) {
+					agt_fromL[i].goal_x = dirL_goal[j][0];
+					agt_fromL[i].goal_y = dirL_goal[j][1];
+					goals[agt_fromL[i].sim_index] = RVO::Vector2(agt_fromL[i].goal_x, agt_fromL[i].goal_y);
+				}
+			}
+		}
+		// the agents waiting at buffer to go right
+		if ((agt_fromL[i].waiting_buf) && (sim->getGlobalTime() > 1800)) {
+			for (int j = 0; j < sizeof(dirL_buf)/sizeof(*dirL_buf); j++) {
+				if (goals[agt_fromL[i].sim_index].x() == dirL_buf[j][0] && goals[agt_fromL[i].sim_index].y() == dirL_buf[j][1]) {
+					agt_fromL[i].goal_x = dirL_goal[j][0];
+					agt_fromL[i].goal_y = dirL_goal[j][1];
+					goals[agt_fromL[i].sim_index] = RVO::Vector2(agt_fromL[i].goal_x, agt_fromL[i].goal_y);
+				}
+			}
+		}
+	}
+	// LIGHT GREEN, all cross - from right
+	for (int i = 0; i < nRight; i++) {
+		// the agents waiting at the right side
+		if ((agt_fromR[i].waitingR) && (sim->getGlobalTime() > 1800)) {
+			for (int j = 0; j < sizeof(posR)/sizeof(*posR); j++) {
+				if (agt_fromR[i].app_x == posR[j][0] && agt_fromR[i].app_y == posR[j][1]) {
+					agt_fromR[i].goal_x = dirR_goal[j][0];
+					agt_fromR[i].goal_y = dirR_goal[j][1];
+					goals[agt_fromR[i].sim_index] = RVO::Vector2(agt_fromR[i].goal_x, agt_fromR[i].goal_y);
+				}
+			}
+		}
+		// the agents waiting at buffer to go left
+		if ((agt_fromR[i].waiting_buf) && (sim->getGlobalTime() > 1800)) {
+			for (int j = 0; j < sizeof(dirR_buf)/sizeof(*dirR_buf); j++) {
+				if (goals[agt_fromR[i].sim_index].x() == dirR_buf[j][0] && goals[agt_fromR[i].sim_index].y() == dirR_buf[j][1]) {
+					agt_fromR[i].goal_x = dirR_goal[j][0];
+					agt_fromR[i].goal_y = dirR_goal[j][1];
+					goals[agt_fromR[i].sim_index] = RVO::Vector2(agt_fromR[i].goal_x, agt_fromR[i].goal_y);
+				}
+			}
+		}
+	}
+
+	// remove agent from view if they have reached goal
+	for (int i = 0; i < nLeft; i++) {
+		if (RVO::absSq(sim->getAgentPosition(agt_fromL[i].sim_index) - goals[agt_fromL[i].sim_index]) <= 0.09f &&
+			goals[agt_fromL[i].sim_index].x() == agt_fromL[i].goal_x && 
+			goals[agt_fromL[i].sim_index].y() == agt_fromL[i].goal_y) {
+				sim->setAgentPosition(agt_fromL[i].sim_index, RVO::Vector2(100.0f, 100.0f));
+				sim->setAgentMaxSpeed(agt_fromL[i].sim_index, 0.0f);
+		}
+	}
+	for (int i = 0; i < nRight; i++) {
+		if (RVO::absSq(sim->getAgentPosition(agt_fromR[i].sim_index) - goals[agt_fromR[i].sim_index]) <= 0.09f &&
+			goals[agt_fromR[i].sim_index].x() == agt_fromR[i].goal_x && 
+			goals[agt_fromR[i].sim_index].y() == agt_fromR[i].goal_y) {
+				sim->setAgentPosition(agt_fromR[i].sim_index, RVO::Vector2(100.0f, 100.0f));
+				sim->setAgentMaxSpeed(agt_fromR[i].sim_index, 0.0f);
 		}
 	}
 	
@@ -690,7 +778,7 @@ bool reachedGoal(RVO::RVOSimulator *sim)
 
 bool timeUp(RVO::RVOSimulator *sim)
 {
-	return sim->getGlobalTime() > 1000.0f;
+	return sim->getGlobalTime() > 2550.0f;
 }
 
 int main()
