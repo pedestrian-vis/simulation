@@ -68,8 +68,8 @@ int getThreRight(int t, int hurry);
 /* Store illegal crossing parameter. */
 int illegalR = 0;
 int illegalL = 0;
-// seqR and seqL are the only stuff need adjusting when flow rate changes
-// format {hurryLevel, timeAppear}
+// seqR, seqL, nLeft, and nRight are the only stuff need adjusting when flow rate changes
+// seqR, seqL format {hurryLevel, timeAppear}
 int seqR[nRight][2] = {{8, 0}, {7, 30}, {6, 60}, {1, 90}, {8, 120}, {3, 150}, {2, 180}, {8, 210}, {4, 240}, {4, 270},
 					{9, 300}, {0, 330}, {5, 360}, {5, 390}, {6, 420}, {8, 450}, {7, 480}, {5, 510}, {0, 540}, {4, 570},
 					{2, 600}, {5, 630}, {1, 660}, {5, 690}, {1, 720}, {5, 750}, {4, 780}, {4, 810}, {8, 840}, {10, 870}};
@@ -133,25 +133,33 @@ float buff_sort[42][2] = {{0.0, -6.3}, {0.5, -5.8}, {-0.5, -5.8}, {-0.1, -5.2}, 
 						{-1.0, 1.8}, {1.0, 2.0}, {0.1, 2.1}, {-0.8, 2.5}, {0.6, 2.7}, {-0.2, 3.1}, 
 						{-0.8, 3.5}, {0.8, 3.6}, {-0.4, 4.1}, {1.1, 4.3}, {0.4, 4.4}, {1.1, 4.6}, 
 						{-1.1, 4.7}, {-0.4, 5.0}, {0.6, 5.1}, {0.0, 6.0}, {0.7, 6.0}, {-0.6, 6.4}};
-struct waitL
+struct agt_fromL
 {
 	int hurry;
 	int app_time;
 	float app_x;
 	float app_y;
-	bool waiting;
+	bool waitingL;
+	bool running_fromL;
+	bool waiting_buf;
+	float buf_time;
+	bool running_from_buf;
 };
-struct waitR
+struct agt_fromR
 {
 	int hurry;
 	int app_time;
 	float app_x;
 	float app_y;
-	bool waiting;
+	bool waitingR;
+	bool running_fromR;
+	bool waiting_buf;
+	float buf_time;
+	bool running_from_buf;
 };
 /* init waiting agent structure. */
-struct waitL wait_left[nLeft];
-struct waitR wait_right[nRight];
+struct agt_fromL agt_fromL[nLeft];
+struct agt_fromR agt_fromR[nRight];
 
 /* Store the goals of the agents. */
 std::vector<RVO::Vector2> goals;
@@ -166,10 +174,10 @@ void setupScenario(RVO::RVOSimulator *sim)
 
 	/* Init with all agents as not waiting. */
 	for(int i = 0; i < nLeft; i++) {
-		wait_left[i].waiting = false;
+		agt_fromL[i].waitingL = false;
 	}
 	for(int i = 0; i < nRight; i++) {
-		wait_right[i].waiting = false;
+		agt_fromR[i].waitingR = false;
 	}
 }
 
@@ -250,11 +258,11 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			// goals position the same as origin - waiting
 			sim->addAgent(RVO::Vector2(posL[p][0], posL[p][1]));
 			goals.push_back(RVO::Vector2(posL[p][0], posL[p][1]));
-			wait_left[i].hurry = seqL[i][0];
-			wait_left[i].app_time = seqL[i][1];
-			wait_left[i].app_x = posL[p][0];
-			wait_left[i].app_y = posL[p][1];
-			wait_left[i].waiting = true;
+			agt_fromL[i].hurry = seqL[i][0];
+			agt_fromL[i].app_time = seqL[i][1];
+			agt_fromL[i].app_x = posL[p][0];
+			agt_fromL[i].app_y = posL[p][1];
+			agt_fromL[i].waitingL = true;
 		}
 	}
 	// agents appears and waiting - right
@@ -294,51 +302,53 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			// goals position the same as origin - waiting
 			sim->addAgent(RVO::Vector2(posR[p][0], posR[p][1]));
 			goals.push_back(RVO::Vector2(posR[p][0], posR[p][1]));
-			wait_right[i].hurry = seqR[i][0];
-			wait_right[i].app_time = seqR[i][1];
-			wait_right[i].app_x = posR[p][0];
-			wait_right[i].app_y = posR[p][1];
-			wait_right[i].waiting = true;
+			agt_fromR[i].hurry = seqR[i][0];
+			agt_fromR[i].app_time = seqR[i][1];
+			agt_fromR[i].app_x = posR[p][0];
+			agt_fromR[i].app_y = posR[p][1];
+			agt_fromR[i].waitingR = true;
 		}
 	}
 
-	// chech waiting agents whether run the light - left
+	// check waiting agents whether run the light - left
 	for (int i = 0; i < nLeft; i++) {
-		if ((wait_left[i].waiting == true && (sim->getGlobalTime() < 460))) {
-			if (illegalR + illegalL >= getThreLeft(sim->getGlobalTime() - wait_left[i].app_time, wait_left[i].hurry)) {
+		if ((agt_fromL[i].waitingL == true && (sim->getGlobalTime() < 460))) {
+			if (illegalR + illegalL >= getThreLeft(sim->getGlobalTime() - agt_fromL[i].app_time, agt_fromL[i].hurry)) {
 				for (size_t k = 0; k < sim->getNumAgents(); k++) {
-					if (sim->getAgentPosition(k).x() == wait_left[i].app_x && sim->getAgentPosition(k).y() == wait_left[i].app_y) {
+					if (sim->getAgentPosition(k).x() == agt_fromL[i].app_x && sim->getAgentPosition(k).y() == agt_fromL[i].app_y) {
 						// goal at buffer set via the same index
 						for(int j = 0; j < sizeof(posL)/sizeof(*posL); j++) {
-							if (wait_left[i].app_x == posL[j][0] && wait_left[i].app_y == posL[j][1]) {
+							if (agt_fromL[i].app_x == posL[j][0] && agt_fromL[i].app_y == posL[j][1]) {
 								goals[k] = RVO::Vector2(dirL_buf[j][0], dirL_buf[j][1]);
 							}
 						}
 					}
 				}
 				illegalL++;
-				wait_left[i].waiting = false;
+				agt_fromL[i].waitingL = false;
+				agt_fromL[i].running_fromL = true;
 			}
 		}
 	}
-	// chech waiting agents whether run the light - right
+	// check waiting agents whether run the light - right
 	for (int i = 0; i < nRight; i++) {
-		if ((wait_right[i].waiting == true) && (
+		if ((agt_fromR[i].waitingR == true) && (
 			(sim->getGlobalTime() < 210) ||
 			(sim->getGlobalTime() > 540 && sim->getGlobalTime() < 810))) {
-			if (illegalR + illegalL >= getThreRight(sim->getGlobalTime() - wait_right[i].app_time, wait_right[i].hurry)) {
+			if (illegalR + illegalL >= getThreRight(sim->getGlobalTime() - agt_fromR[i].app_time, agt_fromR[i].hurry)) {
 				for (size_t k = 0; k < sim->getNumAgents(); k++) {
-					if (sim->getAgentPosition(k).x() == wait_right[i].app_x && sim->getAgentPosition(k).y() == wait_right[i].app_y) {
+					if (sim->getAgentPosition(k).x() == agt_fromR[i].app_x && sim->getAgentPosition(k).y() == agt_fromR[i].app_y) {
 						// goal at buffer set via the same index
 						for(int j = 0; j < sizeof(posR)/sizeof(*posR); j++) {
-							if (wait_right[i].app_x == posR[j][0] && wait_right[i].app_y == posR[j][1]) {
+							if (agt_fromR[i].app_x == posR[j][0] && agt_fromR[i].app_y == posR[j][1]) {
 								goals[k] = RVO::Vector2(dirR_buf[j][0], dirR_buf[j][1]);
 							}
 						}
 					}
 				}
 				illegalR++;
-				wait_right[i].waiting = false;
+				agt_fromR[i].waitingR = false;
+				agt_fromR[i].running_fromR = true;
 			}
 		}
 	}
@@ -359,6 +369,28 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 						}
 					}
 				}
+			}
+		}
+	}
+	// if reaches buffer, reset state as waiting - fromL
+	for (int i = 0; i < nLeft; i++) {
+		if (agt_fromL[i].running_fromL) {
+			if (RVO::absSq(sim->getAgentPosition(i) - goals[i]) <= sim->getAgentRadius(i) * sim->getAgentRadius(i)) {
+				agt_fromL[i].running_fromL = false;
+				agt_fromL[i].waiting_buf = true;
+				agt_fromL[i].buf_time = sim->getGlobalTime();
+				illegalL--;
+			}
+		}
+	}
+	// if reaches buffer, reset state as waiting - fromR
+	for (int i = 0; i < nRight; i++) {
+		if (agt_fromR[i].running_fromR) {
+			if (RVO::absSq(sim->getAgentPosition(i) - goals[i]) <= sim->getAgentRadius(i) * sim->getAgentRadius(i)) {
+				agt_fromR[i].running_fromR = false;
+				agt_fromR[i].waiting_buf = true;
+				agt_fromL[i].buf_time = sim->getGlobalTime();
+				illegalR--;
 			}
 		}
 	}
