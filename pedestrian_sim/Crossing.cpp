@@ -376,8 +376,15 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 
 	// check waiting agents whether run the light - from left
 	for (int i = 0; i < nLeft; i++) {
-		if ((agt_fromL[i].waitingL == true && (sim->getGlobalTime() < 460))) {
-			if (illegalR + illegalL >= getThreLeft(sim->getGlobalTime() - agt_fromL[i].app_time, agt_fromL[i].hurry)) {
+		if (agt_fromL[i].waitingL == true && (
+		(sim->getGlobalTime() < 460) ||
+		(sim->getGlobalTime() > 1500))) {
+			int waiting_time = sim->getGlobalTime() - agt_fromL[i].app_time;
+			// reset initial waiting time after 30-50 vehicle stream
+			if (sim->getGlobalTime() > 1500 && agt_fromR[i].app_time > 390 && agt_fromR[i].app_time < 1500) {
+				waiting_time = sim->getGlobalTime() - 1470;
+			}
+			if (illegalR + illegalL >= getThreLeft(waiting_time, agt_fromL[i].hurry)) {
 				goals[agt_fromL[i].sim_index] = RVO::Vector2(agt_fromL[i].buf_x, agt_fromL[i].buf_y);
 				illegalL++;
 				agt_fromL[i].waitingL = false;
@@ -387,10 +394,23 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 	}
 	// check waiting agents whether run the light - from right
 	for (int i = 0; i < nRight; i++) {
-		if ((agt_fromR[i].waitingR == true) && (
-			(sim->getGlobalTime() < 210) ||
-			(sim->getGlobalTime() > 540 && sim->getGlobalTime() < 810))) {
-			if (illegalR + illegalL >= getThreRight(sim->getGlobalTime() - agt_fromR[i].app_time, agt_fromR[i].hurry)) {
+		if (agt_fromR[i].waitingR && (
+		(sim->getGlobalTime() < 210) ||
+		(sim->getGlobalTime() > 540 && sim->getGlobalTime() < 810) ||
+		(sim->getGlobalTime() > 1035))) {
+			int waiting_time = sim->getGlobalTime() - agt_fromR[i].app_time;
+			// adjust waiting time if have met the vehicle flows
+			if (sim->getGlobalTime() > 540 && sim->getGlobalTime() < 810 && agt_fromR[i].app_time < 300) {
+				waiting_time -= 150;
+			}
+			if (sim->getGlobalTime() > 540 && sim->getGlobalTime() < 810 && agt_fromR[i].app_time > 300 && agt_fromR[i].app_time < 600) {
+				waiting_time -= 90;
+			}
+			if (sim->getGlobalTime() > 1035 && agt_fromR[i].app_time > 690 && agt_fromR[i].app_time < 1035) {
+				waiting_time = sim->getGlobalTime() - 1020; // reset initial waiting time after 30-50 vehicle stream
+			}
+			// look up the state table about tolerable illegals in view
+			if (illegalR + illegalL >= getThreRight(waiting_time, agt_fromR[i].hurry)) {
 				goals[agt_fromR[i].sim_index] = RVO::Vector2(agt_fromR[i].buf_x, agt_fromR[i].buf_y);
 				illegalR++;
 				agt_fromR[i].waitingR = false;
@@ -475,7 +495,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			if (RVO::absSq(sim->getAgentPosition(i) - goals[i]) <= sim->getAgentRadius(i) * sim->getAgentRadius(i)) {
 				agt_fromR[i].running_fromR = false;
 				agt_fromR[i].waiting_buf = true;
-				agt_fromL[i].buf_time = sim->getGlobalTime();
+				agt_fromR[i].buf_time = sim->getGlobalTime();
 				illegalR--;
 			}
 		}
@@ -484,14 +504,15 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 	// check buffer waiting agents whether run the light - to left
 	for (int i = 0; i < nRight; i++) {
 		if ((agt_fromR[i].waiting_buf == true) && (
-			(sim->getGlobalTime() < 540))) {
-			if (illegalL >= getThreLeft(sim->getGlobalTime() - agt_fromR[i].buf_time, agt_fromR[i].hurry)) {
-				// find corresponding k and reset goal
-				for (size_t k = 0; k < sim->getNumAgents(); k++) {
-					if (goals[k].x() == agt_fromR[i].buf_x && goals[k].y() == agt_fromR[i].buf_y) {
-						goals[k] = RVO::Vector2(agt_fromR[i].goal_x, agt_fromR[i].goal_y);
-					}
-				}
+		(sim->getGlobalTime() < 540) ||
+		(sim->getGlobalTime() > 1500))) {
+			int waiting_time = sim->getGlobalTime() - agt_fromR[i].buf_time;
+			// reset initial waiting time after 30-50 vehicle stream
+			if (sim->getGlobalTime() > 1500 && agt_fromR[i].buf_time > 390 && agt_fromR[i].buf_time < 1500) {
+				waiting_time = sim->getGlobalTime() - 1485;
+			}
+			if (illegalL >= getThreLeft(waiting_time, agt_fromR[i].hurry)) {
+				goals[agt_fromR[i].sim_index] = RVO::Vector2(agt_fromR[i].goal_x, agt_fromR[i].goal_y);
 				illegalL++;
 				agt_fromR[i].waiting_buf = false;
 				agt_fromR[i].running_from_buf = true;
@@ -501,15 +522,22 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 	// check buffer waiting agents whether run the light - to right
 	for (int i = 0; i < nLeft; i++) {
 		if ((agt_fromL[i].waiting_buf == true) && (
-			(sim->getGlobalTime() < 210) ||
-			(sim->getGlobalTime() > 540 && sim->getGlobalTime() < 810))) {
-			if (illegalR >= getThreRight(sim->getGlobalTime() - agt_fromL[i].buf_time, agt_fromL[i].hurry)) {
-				// find corresponding k and reset goal
-				for (size_t k = 0; k < sim->getNumAgents(); k++) {
-					if (goals[k].x() == agt_fromL[i].buf_x && goals[k].y() == agt_fromL[i].buf_y) {
-						goals[k] = RVO::Vector2(agt_fromL[i].goal_x, agt_fromL[i].goal_y);
-					}
-				}
+		(sim->getGlobalTime() < 210) ||
+		(sim->getGlobalTime() > 540 && sim->getGlobalTime() < 810) ||
+		(sim->getGlobalTime() > 1035))) {
+			int waiting_time = sim->getGlobalTime() - agt_fromL[i].buf_time;
+			// adjust waiting time if have met the vehicle flows
+			if (sim->getGlobalTime() > 540 && sim->getGlobalTime() < 810 && agt_fromL[i].buf_time < 300) {
+				waiting_time -= 150;
+			}
+			if (sim->getGlobalTime() > 540 && sim->getGlobalTime() < 810 && agt_fromL[i].buf_time > 300 && agt_fromL[i].buf_time < 600) {
+				waiting_time -= 90;
+			}
+			if (sim->getGlobalTime() > 1035 && agt_fromL[i].buf_time > 690 && agt_fromL[i].buf_time < 1035) {
+				waiting_time = sim->getGlobalTime() - 1020; // reset initial waiting time after 30-50 vehicle stream
+			}
+			if (illegalR >= getThreRight(waiting_time, agt_fromL[i].hurry)) {
+				goals[agt_fromL[i].sim_index] = RVO::Vector2(agt_fromL[i].goal_x, agt_fromL[i].goal_y);
 				illegalR++;
 				agt_fromL[i].waiting_buf = false;
 				agt_fromL[i].running_from_buf = true;
@@ -520,7 +548,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 	// LIGHT GREEN, all cross - from left
 	for (int i = 0; i < nLeft; i++) {
 		// the agents waiting at the left side
-		if ((agt_fromL[i].waitingL) && (sim->getGlobalTime() > 1800)) {
+		if ((agt_fromL[i].waitingL || agt_fromL[i].running_fromL) && (sim->getGlobalTime() > 1800)) {
 			goals[agt_fromL[i].sim_index] = RVO::Vector2(agt_fromL[i].goal_x, agt_fromL[i].goal_y);
 			agt_fromL[i].waitingL = false;
 		}
@@ -533,7 +561,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 	// LIGHT GREEN, all cross - from right
 	for (int i = 0; i < nRight; i++) {
 		// the agents waiting at the right side
-		if ((agt_fromR[i].waitingR) && (sim->getGlobalTime() > 1800)) {
+		if ((agt_fromR[i].waitingR || agt_fromR[i].running_fromR) && (sim->getGlobalTime() > 1800)) {
 			goals[agt_fromR[i].sim_index] = RVO::Vector2(agt_fromR[i].goal_x, agt_fromR[i].goal_y);
 			agt_fromR[i].waitingR = false;
 		}
@@ -746,19 +774,6 @@ int getThreRight(int t, int hurry) {
 	return 1000;
 }
 
-
-bool reachedGoal(RVO::RVOSimulator *sim)
-{
-	/* Check if all agents have reached their goals. */
-	for (size_t i = 0; i < sim->getNumAgents(); ++i) {
-		if (RVO::absSq(sim->getAgentPosition(i) - goals[i]) > sim->getAgentRadius(i) * sim->getAgentRadius(i)) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
 bool timeUp(RVO::RVOSimulator *sim)
 {
 	return sim->getGlobalTime() > 2550.0f;
@@ -781,8 +796,6 @@ int main()
 		thesisManipulation(sim);
 		sim->doStep();
 	}
-	// while (!reachedGoal(sim));
-	/* Force stop if agents never reach their goals. */
 	while (!timeUp(sim));
 
 	delete sim;
