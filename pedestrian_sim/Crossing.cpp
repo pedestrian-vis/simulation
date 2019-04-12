@@ -80,6 +80,11 @@ int seqR[nRight][2] = {{8, 0}, {7, 30}, {6, 60}, {1, 90}, {8, 120}, {3, 150}, {2
 					{7, 1650}, {0, 1680}, {9, 1710}, {8, 1740}, {9, 1770}, {9, 1800}, {8, 1830}, {3, 1860}, {8, 1890}, {4, 1920},
 					{4, 1950}, {7, 1980}, {3, 2010}, {3, 2040}, {7, 2070}, {10, 2100}, {10, 2130}, {3, 2160}, {9, 2190}, {0, 2220},
 					{0, 2250}, {6, 2280}, {3, 2310}, {3, 2340}, {1, 2370}, {7, 2400}, {10, 2430}, {4, 2460}, {4, 2490}, {1, 2520}};
+// int seqL[nLeft][2] = {{8, 0}, {7, 30}, {6, 60}, {1, 90}, {8, 120}, {3, 150}, {2, 180}, {8, 210}, {4, 240}, {4, 270},
+// 					{9, 300}, {0, 330}, {5, 360}, {5, 390}, {6, 420}, {8, 450}, {7, 480}, {5, 510}, {0, 540}, {4, 570},
+// 					{2, 600}, {5, 630}, {1, 660}, {5, 690}, {1, 720}, {5, 750}, {4, 780}, {4, 810}, {8, 840}, {10, 870},
+// 					{4, 900}, {7, 907}, {8, 915}, {9, 922}, {9, 930}, {9, 937}, {5, 945}, {10, 952}, {8, 960}, {1, 967},
+// 					{6, 975}, {4, 982}, {0, 990}, {1, 997}, {3, 1005}, {6, 1012}, {2, 1020}, {4, 1027}, {6, 1035}, {7, 1042}};
 int seqL[nLeft][2] = {{8, 45}, {4, 105}, {1, 165}, {10, 225}, {8, 285}, {1, 345}, {9, 405}, {4, 465}, {5, 525}, {2, 585},
 					{2, 645}, {1, 705}, {4, 765}, {1, 825}, {7, 885}, {8, 915}, {4, 930}, {2, 945}, {9, 960}, {5, 975},
 					{0, 990}, {7, 1005}, {9, 1020}, {3, 1035}, {6, 1050}, {3, 1095}, {2, 1155}, {2, 1215}, {7, 1275}, {1, 1335},
@@ -94,7 +99,10 @@ float posL[][2] = {{-14.6, 3.1}, {-15.3, -4.0}, {-15.1, 4.6}, {-15.1, 1.9}, {-15
 					{-14.7, -4.5}, {-14.9, -7.1}, {-15.1, 7.2}, {-14.2, 5.9}, {-14.4, -6.7}, {-15.1, 6.1},
 					{-16.6, 0.4}, {-16.8, 4.3}, {-15.1, -8.0}, {-16.0, -6.2}, {-15.6, -2.4}, {-15.5, -5.4},
 					{-16.7, 6.0}, {-15.6, 7.9}, {-16.7, -6.4}, {-14.4, -8.4}, {-16.8, -4.5}, {-16.4, -5.3},
-					{-16.3, 7.1}, {-17.0, 1.7}, {-14.7, 8.0}, {-16.2, -8.1}, {-17.4, 5.7}, {-17.1, -5.2}};
+					{-16.3, 7.1}, {-17.0, 1.7}, {-14.7, 8.0}, {-16.2, -8.1}, {-17.4, 5.7}, {-17.1, -5.2},
+					{-15.9, -7.1}, {-15.8, 5.6}, {-17.7, 2.7}, {-17.3, -2.9}, {-17.1, -7.1}, {-16.8, -1.7}, 
+					{-17.1, -7.9}, {-16.5, 8.1}, {-16.7, 3.5}, {-17.0, -0.4}, {-17.1, 7.0}, {-17.4, 1.0}, 
+					{-17.4, -3.7}, {-17.4, -6.0}, {-15.7, -1.6}, {-16.9, 2.5}, {-16.3, -1.0}, {-16.7, 5.1}};
 float posR[][2] = {{10.4, -3.1}, {11.1, 4.0}, {10.9, -4.6}, {10.9, -1.9}, {10.8, 2.0}, {11.3, 0.7},
 					{10.2, -0.6}, {10.1, 3.2}, {11.1, -3.0}, {10.1, -2.1}, {10.6, -4.0}, {10.4, 1.0},
 					{11.2, -0.4}, {10.0, 0.1}, {11.8, -1.1}, {12.1, 2.5}, {11.4, 3.1}, {12.3, 3.1},
@@ -102,7 +110,12 @@ float posR[][2] = {{10.4, -3.1}, {11.1, 4.0}, {10.9, -4.6}, {10.9, -1.9}, {10.8,
 					{10.5, 4.5}, {10.7, 7.1}, {10.9, -7.2}, {10.0, -5.9}, {10.2, 6.7}, {10.9, -6.1},
 					{12.4, -0.4}, {12.6, -4.3}, {10.9, 8.0}, {11.8, 6.2}, {11.4, 2.4}, {11.3, 5.4},
 					{12.5, -6.0}, {11.4, -7.9}, {12.5, 6.4}, {10.2, 8.4}, {12.6, 4.5}, {12.2, 5.3},
-					{12.1, -7.1}, {12.8, -1.7}, {10.5, -8.0}, {12.0, 8.1}, {13.2, -5.7}, {12.9, 5.2}};
+					{12.1, -7.1}, {12.8, -1.7}, {10.5, -8.0}, {12.0, 8.1}, {13.2, -5.7}, {12.9, 5.2},
+					{11.7, 7.1}, {11.6, -5.6}, {13.5, -2.7}, {13.1, 2.9}, {12.9, 7.1}, {12.6, 1.7},
+					{12.9, 7.9}, {12.3, -8.1}, {12.5, -3.5}, {12.8, 0.4}, {12.9, -7.0}, {13.2, -1.0},
+					{13.2, 3.7}, {13.2, 6.0}, {11.5, 1.6}, {12.7, -2.5}, {12.1, 1.0}, {12.5, -5.1},
+					{13.5, 1.2}, {13.7, 4.8}, {13.7, 0.1}, {13.3, 2.1}, {13.7, -7.3}, {13.4, -3.7},
+					{13.5, -4.7}, {13.6, -6.5}, {13.7, 7.8}, {13.7, 6.7}, {11.8, 4.6}, {13.7, -1.8}};
 // storing the goals on buffer and the other side with the same index
 float dirR_buf[][2] = {{0.5, -3.4}, {-0.8, 3.5}, {0.4, -4.1}, {0.0, 0.7}, {0.1, 2.1}, {1.1, 1.1}, 
 						{-0.8, 0.1}, {-0.2, 3.1}, {0.0, -2.1}, {-1.0, 1.8}, {-0.1, -2.9}, {0.7, -0.2}, 
@@ -111,7 +124,12 @@ float dirR_buf[][2] = {{0.5, -3.4}, {-0.8, 3.5}, {0.4, -4.1}, {0.0, 0.7}, {0.1, 
 						{-0.8, 2.5}, {0.8, 3.6}, {-0.5, -3.9}, {-0.5, -3.9}, {0.6, 5.1}, {0.4, -4.1}, 
 						{-0.7, -1.0}, {-0.1, -2.9}, {-0.4, 5.0}, {0.4, 4.4}, {-0.8, 2.5}, {0.7, 6.0}, 
 						{0.4, -4.1}, {-0.1, -5.2}, {1.1, 4.3}, {0.0, 6.0}, {-0.2, 3.1}, {-1.1, 4.7}, 
-						{-0.8, -5.0}, {-0.7, -1.0}, {-0.5, -5.8}, {1.1, 4.6}, {0.5, -3.4}, {-0.4, 4.1}};
+						{-0.8, -5.0}, {-0.7, -1.0}, {-0.5, -5.8}, {1.1, 4.6}, {0.5, -3.4}, {-0.4, 4.1},
+						{0.8, 3.6}, {0.0, -2.1}, {0.5, -3.4}, {-0.7, 1.1}, {0.8, 3.6}, {0.7, -0.2},
+						{-0.4, 5.0}, {-0.5, -3.9}, {0.4, -1.0}, {-0.7, -1.0}, {0.4, -4.1}, {1.1, -1.0},
+						{-0.4, 4.1}, {-0.5, -5.8}, {0.7, -0.2}, {-1.0, 1.8}, {-0.8, 2.5}, {-0.5, -3.9},
+						{0.1, 2.1}, {-0.8, 2.5}, {-0.8, 0.1}, {-0.7, 1.1}, {-0.5, -3.9}, {0.5, -3.4},
+						{-0.6, -2.4}, {0.4, -4.1}, {0.6, 5.1}, {0.6, 5.1}, {-0.8, 3.5}, {-1.0, 1.8}};
 float dirR_goal[][2] = {{-14.2, -0.1}, {-14.6, 3.1}, {-15.5, -0.7}, {-15.1, 1.9}, {-14.4, 0.6}, {-14.6, -1.0}, 
 						{-14.4, 0.6}, {-15.3, 3.0}, {-16.3, -2.5}, {-15.4, 0.4}, {-15.0, -2.0}, {-16.0, 1.1}, 
 						{-14.2, -0.1}, {-16.6, 0.4}, {-15.5, -0.7}, {-17.0, 1.7}, {-15.8, 2.3}, {-14.7, 5.5}, 
@@ -119,7 +137,12 @@ float dirR_goal[][2] = {{-14.2, -0.1}, {-14.6, 3.1}, {-15.5, -0.7}, {-15.1, 1.9}
 						{-16.0, 1.1}, {-16.0, 1.1}, {-15.6, -3.1}, {-14.9, -5.5}, {-15.1, 4.6}, {-15.6, -2.4}, 
 						{-16.3, -2.5}, {-15.0, -2.0}, {-14.8, 4.0}, {-17.0, 1.7}, {-14.3, 2.1}, {-15.1, 6.1}, 
 						{-16.1, -3.7}, {-14.7, -4.5}, {-15.9, 4.0}, {-14.8, 4.0}, {-15.8, 2.3}, {-15.3, 3.0}, 
-						{-14.9, -5.5}, {-15.5, -0.7}, {-16.1, -3.7}, {-14.3, 2.1}, {-15.0, -2.0}, {-14.8, 4.0}};
+						{-14.9, -5.5}, {-15.5, -0.7}, {-16.1, -3.7}, {-14.3, 2.1}, {-15.0, -2.0}, {-14.8, 4.0},
+						{-16.0, 1.1}, {-16.3, -2.5}, {-15.0, -2.0}, {-17.0, 1.7}, {-15.0, -2.0}, {-16.0, 1.1},
+						{-14.8, 4.0}, {-16.1, -3.7}, {-15.5, -0.7}, {-16.3, -2.5}, {-15.6, -2.4}, {-15.5, -0.7},
+						{-14.7, 5.5}, {-15.9, 4.0}, {-16.0, 1.1}, {-15.4, 0.4}, {-14.3, 2.1}, {-16.1, -3.7},
+						{-14.4, 0.6}, {-16.0, 1.1}, {-16.6, 0.4}, {-17.0, 1.7}, {-16.1, -3.7}, {-14.2, -0.1},
+						{-14.6, -1.0}, {-15.6, -2.4}, {-15.1, 4.6}, {-15.1, 4.6}, {-14.6, 3.1}, {-15.4, 0.4}};
 float dirL_buf[][2] = {{-0.4, 4.1}, {-0.6, -2.4}, {0.4, 4.4}, {-0.8, 2.5}, {-0.8, 0.1}, {-0.7, -1.0}, 
 						{0.1, 2.1}, {0.4, -1.0}, {0.8, 3.6}, {-0.2, 3.1}, {-0.4, 5.0}, {-0.1, -0.1}, 
 						{0.7, 0.5}, {-0.8, -1.7}, {0.6, 2.7}, {0.7, -0.2}, {0.6, -1.7}, {0.0, 0.7}, 
@@ -127,7 +150,10 @@ float dirL_buf[][2] = {{-0.4, 4.1}, {-0.6, -2.4}, {0.4, 4.4}, {-0.8, 2.5}, {-0.8
 						{-0.1, -2.9}, {-0.8, -5.0}, {-0.4, 5.0}, {-0.6, 6.4}, {0.4, -4.1}, {-0.4, 5.0}, 
 						{0.7, -0.2}, {-0.2, 3.1}, {-0.5, -3.9}, {-0.5, -3.9}, {0.7, -0.2}, {-0.5, -3.9}, 
 						{-0.4, 4.1}, {1.0, 2.0}, {0.4, -4.1}, {-0.5, -5.8}, {-0.6, -2.4}, {-0.5, -3.9}, 
-						{0.8, 3.6}, {-0.7, 1.1}, {0.0, 6.0}, {-0.1, -5.2}, {0.4, 4.4}, {-0.1, -2.9}};
+						{0.8, 3.6}, {-0.7, 1.1}, {0.0, 6.0}, {-0.1, -5.2}, {0.4, 4.4}, {-0.1, -2.9},
+						{-0.8, -5.0}, {-0.4, 5.0}, {-0.2, 3.1}, {0.7, -0.2}, {-0.8, -5.0}, {-0.1, -0.1},
+						{-0.5, -3.9}, {0.0, 6.0}, {0.8, 3.6}, {-0.7, 1.1}, {-0.2, 3.1}, {0.6, 2.7},
+						{0.4, -1.0}, {0.4, -4.1}, {-0.1, -0.1}, {-0.2, 3.1}, {-0.1, -0.1}, {-0.6, 6.4}};
 float dirL_goal[][2] = {{11.1, 4.0}, {10.0, 0.1}, {11.9, 3.7}, {10.1, 3.2}, {10.8, 2.0}, {12.8, -1.7}, 
 						{10.8, 2.0}, {12.4, -0.4}, {11.3, 5.4}, {11.3, 5.4}, {11.4, 2.4}, {10.0, 0.1}, 
 						{11.2, -0.4}, {10.4, 1.0}, {12.3, 3.1}, {12.4, -0.4}, {11.3, 0.7}, {11.4, 3.1}, 
@@ -135,7 +161,10 @@ float dirL_goal[][2] = {{11.1, 4.0}, {10.0, 0.1}, {11.9, 3.7}, {10.1, 3.2}, {10.
 						{10.2, -0.6}, {13.2, -5.7}, {10.5, 4.5}, {12.1, 2.5}, {11.8, -1.1}, {12.2, 5.3}, 
 						{11.4, 2.4}, {10.5, 4.5}, {10.1, -2.1}, {13.2, -5.7}, {12.4, -0.4}, {11.1, -3.0}, 
 						{12.6, 4.5}, {12.3, 3.1}, {11.1, -3.0}, {11.1, -3.0}, {11.2, -0.4}, {12.4, -0.4}, 
-						{11.4, 2.4}, {12.1, 2.5}, {10.5, 4.5}, {10.6, -4.0}, {12.9, 5.2}, {10.2, -0.6}};
+						{11.4, 2.4}, {12.1, 2.5}, {10.5, 4.5}, {10.6, -4.0}, {12.9, 5.2}, {10.2, -0.6},
+						{13.2, -5.7}, {12.2, 5.3}, {11.9, 3.7}, {12.4, -0.4}, {13.2, -5.7}, {10.0, 0.1},
+						{10.1, -2.1}, {10.5, 4.5}, {11.3, 5.4}, {11.8, -1.1}, {11.9, 3.7}, {12.3, 3.1},
+						{12.4, -0.4}, {11.8, -1.1}, {10.0, 0.1}, {11.3, 5.4}, {10.0, 0.1}, {12.1, 2.5}};
 // used for altering goal if occupied
 float buff_sort[42][2] = {{0.0, -6.3}, {0.5, -5.8}, {-0.5, -5.8}, {-0.1, -5.2}, {-0.8, -5.0}, {0.4, -4.1}, 
 						{-0.5, -3.9}, {0.5, -3.4}, {-0.1, -2.9}, {-0.6, -2.4}, {0.0, -2.1}, {0.6, -1.7}, 
@@ -268,10 +297,11 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			// unoccupied position assigned to a new agent
 			int p = rand() % posRange + posMin;
 			bool occupy = true;
-			while (occupy == true && p < sizeof(posL)/sizeof(*posL)) {
+			while (occupy) {
 				occupy = false;
-				for (size_t k = 0; k < sim->getNumAgents(); k++) {
-					if (sim->getAgentPosition(k).x() == posL[p][0] && sim->getAgentPosition(k).y() == posL[p][1]) {
+				for (int k = 0; k < nLeft; k++) {
+					if (agt_fromL[k].waitingL && goals[agt_fromL[k].sim_index].x() == posL[p][0] &&
+						goals[agt_fromL[k].sim_index].y() == posL[p][1]) {
 						occupy = true;
 					}
 				}
@@ -282,10 +312,10 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			agt_fromL[i].app_time = seqL[i][1];
 			agt_fromL[i].app_x = posL[p][0];
 			agt_fromL[i].app_y = posL[p][1];
-			// agt_fromL[i].buf_x = dirR_buf[p][0];
-			// agt_fromL[i].buf_y = dirR_buf[p][1];
-			// agt_fromL[i].goal_x = dirR_goal[p][0];
-			// agt_fromL[i].goal_y = dirR_goal[p][1];
+			agt_fromL[i].buf_x = dirL_buf[p][0];
+			agt_fromL[i].buf_y = dirL_buf[p][1];
+			agt_fromL[i].goal_x = dirL_goal[p][0];
+			agt_fromL[i].goal_y = dirL_goal[p][1];
 			agt_fromL[i].waitingL = true;
 			agt_fromL[i].sim_index = goals.size();
 			sim->addAgent(RVO::Vector2(agt_fromL[i].app_x, agt_fromL[i].app_y));
@@ -312,16 +342,17 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			}
 			// if all occupied, the range of ramdom generated position index changes
 			if (first_30_occupy) {
-				posRange = 18;
+				posRange = 48;
 				posMin = 30;
 			}
 			// unoccupied position assigned to a new agent
 			int p = rand() % posRange + posMin;
 			bool occupy = true;
-			while (occupy == true && p < sizeof(posR)/sizeof(*posR)) {
+			while (occupy) {
 				occupy = false;
-				for (size_t k = 0; k < sim->getNumAgents(); k++) {
-					if (sim->getAgentPosition(k).x() == posR[p][0] && sim->getAgentPosition(k).y() == posR[p][1]) {
+				for (int k = 0; k < nRight; k++) {
+					if (agt_fromR[k].waitingR && goals[agt_fromR[k].sim_index].x() == posR[p][0] &&
+						goals[agt_fromR[k].sim_index].y() == posR[p][1]) {
 						occupy = true;
 					}
 				}
@@ -332,10 +363,10 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			agt_fromR[i].app_time = seqR[i][1];
 			agt_fromR[i].app_x = posR[p][0];
 			agt_fromR[i].app_y = posR[p][1];
-			// agt_fromR[i].buf_x = dirR_buf[p][0];
-			// agt_fromR[i].buf_y = dirR_buf[p][1];
-			// agt_fromR[i].goal_x = dirR_goal[p][0];
-			// agt_fromR[i].goal_y = dirR_goal[p][1];
+			agt_fromR[i].buf_x = dirR_buf[p][0];
+			agt_fromR[i].buf_y = dirR_buf[p][1];
+			agt_fromR[i].goal_x = dirR_goal[p][0];
+			agt_fromR[i].goal_y = dirR_goal[p][1];
 			agt_fromR[i].waitingR = true;
 			agt_fromR[i].sim_index = goals.size();
 			sim->addAgent(RVO::Vector2(agt_fromR[i].app_x, agt_fromR[i].app_y));
@@ -347,21 +378,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 	for (int i = 0; i < nLeft; i++) {
 		if ((agt_fromL[i].waitingL == true && (sim->getGlobalTime() < 460))) {
 			if (illegalR + illegalL >= getThreLeft(sim->getGlobalTime() - agt_fromL[i].app_time, agt_fromL[i].hurry)) {
-				// goals[agt_fromL[i].sim_index] = RVO::Vector2(agt_fromL[i].buf_x, agt_fromL[i].buf_y);
-				for (size_t k = 0; k < sim->getNumAgents(); k++) {
-					if (sim->getAgentPosition(k).x() == agt_fromL[i].app_x && sim->getAgentPosition(k).y() == agt_fromL[i].app_y) {
-						// goal at buffer and final set via the same index
-						for(int j = 0; j < sizeof(posL)/sizeof(*posL); j++) {
-							if (agt_fromL[i].app_x == posL[j][0] && agt_fromL[i].app_y == posL[j][1]) {
-								agt_fromL[i].buf_x = dirL_buf[j][0];
-								agt_fromL[i].buf_y = dirL_buf[j][1];
-								agt_fromL[i].goal_x = dirL_goal[j][0];
-								agt_fromL[i].goal_y = dirL_goal[j][1];
-								goals[k] = RVO::Vector2(agt_fromL[i].buf_x, agt_fromL[i].buf_y);
-							}
-						}
-					}
-				}
+				goals[agt_fromL[i].sim_index] = RVO::Vector2(agt_fromL[i].buf_x, agt_fromL[i].buf_y);
 				illegalL++;
 				agt_fromL[i].waitingL = false;
 				agt_fromL[i].running_fromL = true;
@@ -374,21 +391,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			(sim->getGlobalTime() < 210) ||
 			(sim->getGlobalTime() > 540 && sim->getGlobalTime() < 810))) {
 			if (illegalR + illegalL >= getThreRight(sim->getGlobalTime() - agt_fromR[i].app_time, agt_fromR[i].hurry)) {
-				// goals[agt_fromR[i].sim_index] = RVO::Vector2(agt_fromR[i].buf_x, agt_fromR[i].buf_y);
-				for (size_t k = 0; k < sim->getNumAgents(); k++) {
-					if (sim->getAgentPosition(k).x() == agt_fromR[i].app_x && sim->getAgentPosition(k).y() == agt_fromR[i].app_y) {
-						// goal at buffer and final set via the same index
-						for(int j = 0; j < sizeof(posR)/sizeof(*posR); j++) {
-							if (agt_fromR[i].app_x == posR[j][0] && agt_fromR[i].app_y == posR[j][1]) {
-								agt_fromR[i].buf_x = dirR_buf[j][0];
-								agt_fromR[i].buf_y = dirR_buf[j][1];
-								agt_fromR[i].goal_x = dirR_goal[j][0];
-								agt_fromR[i].goal_y = dirR_goal[j][1];
-								goals[k] = RVO::Vector2(agt_fromR[i].buf_x, agt_fromR[i].buf_y);
-							}
-						}
-					}
-				}
+				goals[agt_fromR[i].sim_index] = RVO::Vector2(agt_fromR[i].buf_x, agt_fromR[i].buf_y);
 				illegalR++;
 				agt_fromR[i].waitingR = false;
 				agt_fromR[i].running_fromR = true;
@@ -518,46 +521,26 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 	for (int i = 0; i < nLeft; i++) {
 		// the agents waiting at the left side
 		if ((agt_fromL[i].waitingL) && (sim->getGlobalTime() > 1800)) {
-			for (int j = 0; j < sizeof(posL)/sizeof(*posL); j++) {
-				if (agt_fromL[i].app_x == posL[j][0] && agt_fromL[i].app_y == posL[j][1]) {
-					agt_fromL[i].goal_x = dirL_goal[j][0];
-					agt_fromL[i].goal_y = dirL_goal[j][1];
-					goals[agt_fromL[i].sim_index] = RVO::Vector2(agt_fromL[i].goal_x, agt_fromL[i].goal_y);
-				}
-			}
+			goals[agt_fromL[i].sim_index] = RVO::Vector2(agt_fromL[i].goal_x, agt_fromL[i].goal_y);
+			agt_fromL[i].waitingL = false;
 		}
 		// the agents waiting at buffer to go right
 		if ((agt_fromL[i].waiting_buf) && (sim->getGlobalTime() > 1800)) {
-			for (int j = 0; j < sizeof(dirL_buf)/sizeof(*dirL_buf); j++) {
-				if (goals[agt_fromL[i].sim_index].x() == dirL_buf[j][0] && goals[agt_fromL[i].sim_index].y() == dirL_buf[j][1]) {
-					agt_fromL[i].goal_x = dirL_goal[j][0];
-					agt_fromL[i].goal_y = dirL_goal[j][1];
-					goals[agt_fromL[i].sim_index] = RVO::Vector2(agt_fromL[i].goal_x, agt_fromL[i].goal_y);
-				}
-			}
+			goals[agt_fromL[i].sim_index] = RVO::Vector2(agt_fromL[i].goal_x, agt_fromL[i].goal_y);
+			agt_fromL[i].waiting_buf = false;
 		}
 	}
 	// LIGHT GREEN, all cross - from right
 	for (int i = 0; i < nRight; i++) {
 		// the agents waiting at the right side
 		if ((agt_fromR[i].waitingR) && (sim->getGlobalTime() > 1800)) {
-			for (int j = 0; j < sizeof(posR)/sizeof(*posR); j++) {
-				if (agt_fromR[i].app_x == posR[j][0] && agt_fromR[i].app_y == posR[j][1]) {
-					agt_fromR[i].goal_x = dirR_goal[j][0];
-					agt_fromR[i].goal_y = dirR_goal[j][1];
-					goals[agt_fromR[i].sim_index] = RVO::Vector2(agt_fromR[i].goal_x, agt_fromR[i].goal_y);
-				}
-			}
+			goals[agt_fromR[i].sim_index] = RVO::Vector2(agt_fromR[i].goal_x, agt_fromR[i].goal_y);
+			agt_fromR[i].waitingR = false;
 		}
 		// the agents waiting at buffer to go left
 		if ((agt_fromR[i].waiting_buf) && (sim->getGlobalTime() > 1800)) {
-			for (int j = 0; j < sizeof(dirR_buf)/sizeof(*dirR_buf); j++) {
-				if (goals[agt_fromR[i].sim_index].x() == dirR_buf[j][0] && goals[agt_fromR[i].sim_index].y() == dirR_buf[j][1]) {
-					agt_fromR[i].goal_x = dirR_goal[j][0];
-					agt_fromR[i].goal_y = dirR_goal[j][1];
-					goals[agt_fromR[i].sim_index] = RVO::Vector2(agt_fromR[i].goal_x, agt_fromR[i].goal_y);
-				}
-			}
+			goals[agt_fromR[i].sim_index] = RVO::Vector2(agt_fromR[i].goal_x, agt_fromR[i].goal_y);
+			agt_fromR[i].waiting_buf = false;
 		}
 	}
 
