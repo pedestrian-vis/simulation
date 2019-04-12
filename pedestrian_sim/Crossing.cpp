@@ -271,7 +271,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 #ifdef _OPENMP
 #pragma omp parallel for
 #endif
-	// agents appears and waiting - left
+	/* Agents appear and wait - left */
 	for(int i = 0; i < sizeof(seqL)/sizeof(*seqL); i++) {
 		if (sim->getGlobalTime() == seqL[i][1]) {
 			// check whether the first 30 are all occupied
@@ -322,7 +322,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			goals.push_back(RVO::Vector2(agt_fromL[i].app_x, agt_fromL[i].app_y));
 		}
 	}
-	// agents appears and waiting - right
+	/* Agents appear and wait - right */
 	for (int i = 0; i < sizeof(seqR)/sizeof(*seqR); i++) {
 		if (sim->getGlobalTime() == seqR[i][1]) {
 			// check whether the first 30 are all occupied
@@ -374,7 +374,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 		}
 	}
 
-	// check waiting agents whether run the light - from left
+	/* Check running light - from left */
 	for (int i = 0; i < nLeft; i++) {
 		if (agt_fromL[i].waitingL == true && (
 		(sim->getGlobalTime() < 460) ||
@@ -392,7 +392,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			}
 		}
 	}
-	// check waiting agents whether run the light - from right
+	/* Check running light - from right */
 	for (int i = 0; i < nRight; i++) {
 		if (agt_fromR[i].waitingR && (
 		(sim->getGlobalTime() < 210) ||
@@ -418,7 +418,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			}
 		}
 	}
-	// adjust goal at buffer if the original goal is occupied
+	/* Goals at buffer avoid overlapping */
 	for (size_t i = 0; i < sim->getNumAgents(); i++) {
 		if (-1.8f <sim->getAgentPosition(i).x() < 1.8f) {
 			for (size_t j = 0; j < sim->getNumAgents(); j++) {
@@ -478,7 +478,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 		}
 	}
 
-	// if reaches buffer, reset state as waiting - from left
+	/* Reach buffer reset state- from left */
 	for (int i = 0; i < nLeft; i++) {
 		if (agt_fromL[i].running_fromL) {
 			if (RVO::absSq(sim->getAgentPosition(i) - goals[i]) <= sim->getAgentRadius(i) * sim->getAgentRadius(i)) {
@@ -489,7 +489,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			}
 		}
 	}
-	// if reaches buffer, reset state as waiting - from right
+	//* Reach buffer reset state- from right */
 	for (int i = 0; i < nRight; i++) {
 		if (agt_fromR[i].running_fromR) {
 			if (RVO::absSq(sim->getAgentPosition(i) - goals[i]) <= sim->getAgentRadius(i) * sim->getAgentRadius(i)) {
@@ -501,7 +501,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 		}
 	}
 
-	// check buffer waiting agents whether run the light - to left
+	/* Check running light - buffer to left */
 	for (int i = 0; i < nRight; i++) {
 		if ((agt_fromR[i].waiting_buf == true) && (
 		(sim->getGlobalTime() < 540) ||
@@ -519,7 +519,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			}
 		}
 	}
-	// check buffer waiting agents whether run the light - to right
+	/* Check running light - buffer to right */
 	for (int i = 0; i < nLeft; i++) {
 		if ((agt_fromL[i].waiting_buf == true) && (
 		(sim->getGlobalTime() < 210) ||
@@ -545,7 +545,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 		}
 	}
 
-	// LIGHT GREEN, all cross - from left
+	/* Light green - from left */
 	for (int i = 0; i < nLeft; i++) {
 		// the agents waiting at the left side
 		if ((agt_fromL[i].waitingL || agt_fromL[i].running_fromL) && (sim->getGlobalTime() > 1800)) {
@@ -558,7 +558,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			agt_fromL[i].waiting_buf = false;
 		}
 	}
-	// LIGHT GREEN, all cross - from right
+	/* Light green - from right */
 	for (int i = 0; i < nRight; i++) {
 		// the agents waiting at the right side
 		if ((agt_fromR[i].waitingR || agt_fromR[i].running_fromR) && (sim->getGlobalTime() > 1800)) {
@@ -572,7 +572,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 		}
 	}
 
-	// remove agent from view if they have reached goal
+	/* Remove crossed agents - from left */
 	for (int i = 0; i < nLeft; i++) {
 		if (RVO::absSq(sim->getAgentPosition(agt_fromL[i].sim_index) - goals[agt_fromL[i].sim_index]) <= 0.09f &&
 			goals[agt_fromL[i].sim_index].x() == agt_fromL[i].goal_x && 
@@ -581,6 +581,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				sim->setAgentMaxSpeed(agt_fromL[i].sim_index, 0.0f);
 		}
 	}
+	/* Remove crossed agents - from right */
 	for (int i = 0; i < nRight; i++) {
 		if (RVO::absSq(sim->getAgentPosition(agt_fromR[i].sim_index) - goals[agt_fromR[i].sim_index]) <= 0.09f &&
 			goals[agt_fromR[i].sim_index].x() == agt_fromR[i].goal_x && 
