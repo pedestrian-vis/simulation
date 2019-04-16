@@ -80,11 +80,6 @@ int seqR[nRight][2] = {{8, 0}, {7, 30}, {6, 60}, {1, 90}, {8, 120}, {3, 150}, {2
 					{7, 1650}, {0, 1680}, {9, 1710}, {8, 1740}, {9, 1770}, {9, 1800}, {8, 1830}, {3, 1860}, {8, 1890}, {4, 1920},
 					{4, 1950}, {7, 1980}, {3, 2010}, {3, 2040}, {7, 2070}, {10, 2100}, {10, 2130}, {3, 2160}, {9, 2190}, {0, 2220},
 					{0, 2250}, {6, 2280}, {3, 2310}, {3, 2340}, {1, 2370}, {7, 2400}, {10, 2430}, {4, 2460}, {4, 2490}, {1, 2520}};
-// int seqL[nLeft][2] = {{8, 0}, {7, 30}, {6, 60}, {1, 90}, {8, 120}, {3, 150}, {2, 180}, {8, 210}, {4, 240}, {4, 270},
-// 					{9, 300}, {0, 330}, {5, 360}, {5, 390}, {6, 420}, {8, 450}, {7, 480}, {5, 510}, {0, 540}, {4, 570},
-// 					{2, 600}, {5, 630}, {1, 660}, {5, 690}, {1, 720}, {5, 750}, {4, 780}, {4, 810}, {8, 840}, {10, 870},
-// 					{4, 900}, {7, 907}, {8, 915}, {9, 922}, {9, 930}, {9, 937}, {5, 945}, {10, 952}, {8, 960}, {1, 967},
-// 					{6, 975}, {4, 982}, {0, 990}, {1, 997}, {3, 1005}, {6, 1012}, {2, 1020}, {4, 1027}, {6, 1035}, {7, 1042}};
 int seqL[nLeft][2] = {{8, 45}, {4, 105}, {1, 165}, {10, 225}, {8, 285}, {1, 345}, {9, 405}, {4, 465}, {5, 525}, {2, 585},
 					{2, 645}, {1, 705}, {4, 765}, {1, 825}, {7, 885}, {8, 915}, {4, 930}, {2, 945}, {9, 960}, {5, 975},
 					{0, 990}, {7, 1005}, {9, 1020}, {3, 1035}, {6, 1050}, {3, 1095}, {2, 1155}, {2, 1215}, {7, 1275}, {1, 1335},
@@ -320,6 +315,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			agt_fromL[i].sim_index = goals.size();
 			sim->addAgent(RVO::Vector2(agt_fromL[i].app_x, agt_fromL[i].app_y));
 			goals.push_back(RVO::Vector2(agt_fromL[i].app_x, agt_fromL[i].app_y));
+			sim->setAgentMaxSpeed(agt_fromL[i].sim_index, 0.09f*(15+agt_fromL[i].hurry)/20); // maxspeed correlates to hurry level
 		}
 	}
 	/* Agents appear and wait - right */
@@ -371,6 +367,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			agt_fromR[i].sim_index = goals.size();
 			sim->addAgent(RVO::Vector2(agt_fromR[i].app_x, agt_fromR[i].app_y));
 			goals.push_back(RVO::Vector2(agt_fromR[i].app_x, agt_fromR[i].app_y));
+			sim->setAgentMaxSpeed(agt_fromR[i].sim_index, 0.09f*(15+agt_fromR[i].hurry)/20); // maxspeed correlates to hurry level
 		}
 	}
 
