@@ -68,6 +68,7 @@ int getThreRight(int t, int hurry);
 /* Store illegal crossing parameter. */
 int illegalR = 0; // right road segment, including both directions
 int illegalL = 0; // left road segment, including both directions
+int illegal_statistics = 0; // total number of illegal occurrence
 // seqR, seqL, nLeft, and nRight are the only stuff need adjusting when flow rate changes
 // seqR, seqL format: {hurryLevel, timeAppear}
 int seqR[nRight][2] = {{8, 0}, {7, 30}, {6, 60}, {1, 90}, {8, 120}, {3, 150}, {2, 180}, {8, 210}, {4, 240}, {4, 270},
@@ -386,6 +387,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				illegalL++;
 				agt_fromL[i].waitingL = false;
 				agt_fromL[i].running_fromL = true;
+				if (sim->getGlobalTime() < 1800) { illegal_statistics++; }
 			}
 		}
 	}
@@ -412,6 +414,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				illegalR++;
 				agt_fromR[i].waitingR = false;
 				agt_fromR[i].running_fromR = true;
+				if (sim->getGlobalTime() < 1800) { illegal_statistics++; }
 			}
 		}
 	}
@@ -513,6 +516,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				illegalL++;
 				agt_fromR[i].waiting_buf = false;
 				agt_fromR[i].running_from_buf = true;
+				if (sim->getGlobalTime() < 1800) { illegal_statistics++; }
 			}
 		}
 	}
@@ -538,6 +542,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				illegalR++;
 				agt_fromL[i].waiting_buf = false;
 				agt_fromL[i].running_from_buf = true;
+				if (sim->getGlobalTime() < 1800) { illegal_statistics++; }
 			}
 		}
 	}
@@ -772,6 +777,10 @@ int getThreRight(int t, int hurry) {
 	return 1000;
 }
 
+void statistics() {
+	std::cout << illegal_statistics << std::endl;
+}
+
 bool timeUp(RVO::RVOSimulator *sim)
 {
 	return sim->getGlobalTime() > 2550.0f;
@@ -795,6 +804,9 @@ int main()
 		sim->doStep();
 	}
 	while (!timeUp(sim));
+
+	/* Get visualization statistics */
+	// statistics();
 
 	delete sim;
 
