@@ -34,7 +34,7 @@
 .SUFFIXES: .cpp .o
 
 CXX = g++
-CXXFLAGS = -Wall -g -O2
+CXXFLAGS = -std=c++11 -Wall -g -O2
 RM = rm -f
 INCLUDES = -I../src
 LIBS = ../src/libRVO.a

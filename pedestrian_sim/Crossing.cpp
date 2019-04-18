@@ -54,6 +54,9 @@
 
 #include <RVO.h>
 
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 #ifndef M_PI
 const float M_PI = 3.14159265358979323846f;
 #endif
@@ -1064,7 +1067,32 @@ int getThreRight(int t, int hurry) {
 }
 
 void statistics() {
-	std::cout << illegal_statistics << std::endl;
+	/* illegal - flow rate statistics. */
+	// std::cout << illegal_statistics << std::endl;
+
+	/* utilizationn statistics. */
+	json heatmap_data;
+	for(int j = 0; j < 15; j++) {
+		json this_column;
+		this_column["column"] = j;
+		if (j == 8 || j == 9) {
+			for (int i = 0; i < 14; i++) {
+				this_column["bins"].push_back({
+					{"type", "Buffer Zone"},
+					{"count", heatmap[i][j]}
+				});
+			}
+		} else {
+			for (int i = 0; i < 14; i++) {
+				this_column["bins"].push_back({
+					{"type", "Road"},
+					{"count", heatmap[i][j]}
+				});
+			}
+		}
+		heatmap_data.push_back(this_column);
+	}
+	std::cout << heatmap_data << std::endl;
 }
 
 bool timeUp(RVO::RVOSimulator *sim)
