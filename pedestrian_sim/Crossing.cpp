@@ -169,6 +169,7 @@ float buff_sort[42][2] = {{0.0, -6.3}, {0.5, -5.8}, {-0.5, -5.8}, {-0.1, -5.2}, 
 						{-1.0, 1.8}, {1.0, 2.0}, {0.1, 2.1}, {-0.8, 2.5}, {0.6, 2.7}, {-0.2, 3.1}, 
 						{-0.8, 3.5}, {0.8, 3.6}, {-0.4, 4.1}, {1.1, 4.3}, {0.4, 4.4}, {1.1, 4.6}, 
 						{-1.1, 4.7}, {-0.4, 5.0}, {0.6, 5.1}, {0.0, 6.0}, {0.7, 6.0}, {-0.6, 6.4}};
+int heatmap[14][15] = {{0}};
 struct agt_fromL
 {
 	int hurry;
@@ -420,7 +421,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 	}
 	/* Goals at buffer avoid overlapping */
 	for (size_t i = 0; i < sim->getNumAgents(); i++) {
-		if (-1.8f <sim->getAgentPosition(i).x() < 1.8f) {
+		if (-1.8f < sim->getAgentPosition(i).x() && sim->getAgentPosition(i).x() < 1.8f) {
 			for (size_t j = 0; j < sim->getNumAgents(); j++) {
 				if (i != j && goals[i].x() == sim->getAgentPosition(j).x() && goals[i].y() == sim->getAgentPosition(j).y()) {
 					for (int m = 0; m < 42; m++) {
@@ -590,6 +591,291 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			goals[agt_fromR[i].sim_index].y() == agt_fromR[i].goal_y) {
 				sim->setAgentPosition(agt_fromR[i].sim_index, RVO::Vector2(100.0f, 100.0f));
 				sim->setAgentMaxSpeed(agt_fromR[i].sim_index, 0.0f);
+		}
+	}
+
+	/* Store utilization data */
+	for (size_t i = 0; i < sim->getNumAgents(); i++) {
+		if (8.4f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 7.2f) {
+			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
+			{
+				case 0: heatmap[0][0]++; break;
+				case 1: heatmap[0][1]++; break;
+				case 2: heatmap[0][2]++; break;
+				case 3: heatmap[0][3]++; break;
+				case 4: heatmap[0][4]++; break;
+				case 5: heatmap[0][5]++; break;
+				case 6: heatmap[0][6]++; break;
+				case 7: heatmap[0][7]++; break;
+				case 8: heatmap[0][8]++; break;
+				case 9: heatmap[0][9]++; break;
+				case 10: heatmap[0][10]++; break;
+				case 11: heatmap[0][11]++; break;
+				case 12: heatmap[0][12]++; break;
+				case 13: heatmap[0][13]++; break;
+				case 14: heatmap[0][14]++; break;
+				default: ;
+			}
+		} else if (7.2f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 6.0f) {
+			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
+			{
+				case 0: heatmap[1][0]++; break;
+				case 1: heatmap[1][1]++; break;
+				case 2: heatmap[1][2]++; break;
+				case 3: heatmap[1][3]++; break;
+				case 4: heatmap[1][4]++; break;
+				case 5: heatmap[1][5]++; break;
+				case 6: heatmap[1][6]++; break;
+				case 7: heatmap[1][7]++; break;
+				case 8: heatmap[1][8]++; break;
+				case 9: heatmap[1][9]++; break;
+				case 10: heatmap[1][10]++; break;
+				case 11: heatmap[1][11]++; break;
+				case 12: heatmap[1][12]++; break;
+				case 13: heatmap[1][13]++; break;
+				case 14: heatmap[1][14]++; break;
+				default: ;
+			}
+		} else if (6.0f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 4.8f) {
+			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
+			{
+				case 0: heatmap[2][0]++; break;
+				case 1: heatmap[2][1]++; break;
+				case 2: heatmap[2][2]++; break;
+				case 3: heatmap[2][3]++; break;
+				case 4: heatmap[2][4]++; break;
+				case 5: heatmap[2][5]++; break;
+				case 6: heatmap[2][6]++; break;
+				case 7: heatmap[2][7]++; break;
+				case 8: heatmap[2][8]++; break;
+				case 9: heatmap[2][9]++; break;
+				case 10: heatmap[2][10]++; break;
+				case 11: heatmap[2][11]++; break;
+				case 12: heatmap[2][12]++; break;
+				case 13: heatmap[2][13]++; break;
+				case 14: heatmap[2][14]++; break;
+				default: ;
+			}
+		} else if (4.8f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 3.6f) {
+			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
+			{
+				case 0: heatmap[3][0]++; break;
+				case 1: heatmap[3][1]++; break;
+				case 2: heatmap[3][2]++; break;
+				case 3: heatmap[3][3]++; break;
+				case 4: heatmap[3][4]++; break;
+				case 5: heatmap[3][5]++; break;
+				case 6: heatmap[3][6]++; break;
+				case 7: heatmap[3][7]++; break;
+				case 8: heatmap[3][8]++; break;
+				case 9: heatmap[3][9]++; break;
+				case 10: heatmap[3][10]++; break;
+				case 11: heatmap[3][11]++; break;
+				case 12: heatmap[3][12]++; break;
+				case 13: heatmap[3][13]++; break;
+				case 14: heatmap[3][14]++; break;
+				default: ;
+			}
+		} else if (3.6f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 2.4f) {
+			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
+			{
+				case 0: heatmap[4][0]++; break;
+				case 1: heatmap[4][1]++; break;
+				case 2: heatmap[4][2]++; break;
+				case 3: heatmap[4][3]++; break;
+				case 4: heatmap[4][4]++; break;
+				case 5: heatmap[4][5]++; break;
+				case 6: heatmap[4][6]++; break;
+				case 7: heatmap[4][7]++; break;
+				case 8: heatmap[4][8]++; break;
+				case 9: heatmap[4][9]++; break;
+				case 10: heatmap[4][10]++; break;
+				case 11: heatmap[4][11]++; break;
+				case 12: heatmap[4][12]++; break;
+				case 13: heatmap[4][13]++; break;
+				case 14: heatmap[4][14]++; break;
+				default: ;
+			}
+		} else if (2.4f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 1.2f) {
+			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
+			{
+				case 0: heatmap[5][0]++; break;
+				case 1: heatmap[5][1]++; break;
+				case 2: heatmap[5][2]++; break;
+				case 3: heatmap[5][3]++; break;
+				case 4: heatmap[5][4]++; break;
+				case 5: heatmap[5][5]++; break;
+				case 6: heatmap[5][6]++; break;
+				case 7: heatmap[5][7]++; break;
+				case 8: heatmap[5][8]++; break;
+				case 9: heatmap[5][9]++; break;
+				case 10: heatmap[5][10]++; break;
+				case 11: heatmap[5][11]++; break;
+				case 12: heatmap[5][12]++; break;
+				case 13: heatmap[5][13]++; break;
+				case 14: heatmap[5][14]++; break;
+				default: ;
+			}
+		} else if (1.2f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 0.0f) {
+			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
+			{
+				case 0: heatmap[6][0]++; break;
+				case 1: heatmap[6][1]++; break;
+				case 2: heatmap[6][2]++; break;
+				case 3: heatmap[6][3]++; break;
+				case 4: heatmap[6][4]++; break;
+				case 5: heatmap[6][5]++; break;
+				case 6: heatmap[6][6]++; break;
+				case 7: heatmap[6][7]++; break;
+				case 8: heatmap[6][8]++; break;
+				case 9: heatmap[6][9]++; break;
+				case 10: heatmap[6][10]++; break;
+				case 11: heatmap[6][11]++; break;
+				case 12: heatmap[6][12]++; break;
+				case 13: heatmap[6][13]++; break;
+				case 14: heatmap[6][14]++; break;
+				default: ;
+			}
+		} else if (0.0f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -1.2f) {
+			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
+			{
+				case 0: heatmap[7][0]++; break;
+				case 1: heatmap[7][1]++; break;
+				case 2: heatmap[7][2]++; break;
+				case 3: heatmap[7][3]++; break;
+				case 4: heatmap[7][4]++; break;
+				case 5: heatmap[7][5]++; break;
+				case 6: heatmap[7][6]++; break;
+				case 7: heatmap[7][7]++; break;
+				case 8: heatmap[7][8]++; break;
+				case 9: heatmap[7][9]++; break;
+				case 10: heatmap[7][10]++; break;
+				case 11: heatmap[7][11]++; break;
+				case 12: heatmap[7][12]++; break;
+				case 13: heatmap[7][13]++; break;
+				case 14: heatmap[7][14]++; break;
+				default: ;
+			}
+		} else if (-1.2f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -2.4f) {
+			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
+			{
+				case 0: heatmap[8][0]++; break;
+				case 1: heatmap[8][1]++; break;
+				case 2: heatmap[8][2]++; break;
+				case 3: heatmap[8][3]++; break;
+				case 4: heatmap[8][4]++; break;
+				case 5: heatmap[8][5]++; break;
+				case 6: heatmap[8][6]++; break;
+				case 7: heatmap[8][7]++; break;
+				case 8: heatmap[8][8]++; break;
+				case 9: heatmap[8][9]++; break;
+				case 10: heatmap[8][10]++; break;
+				case 11: heatmap[8][11]++; break;
+				case 12: heatmap[8][12]++; break;
+				case 13: heatmap[8][13]++; break;
+				case 14: heatmap[8][14]++; break;
+				default: ;
+			}
+		} else if (-2.4f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -3.6f) {
+			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
+			{
+				case 0: heatmap[9][0]++; break;
+				case 1: heatmap[9][1]++; break;
+				case 2: heatmap[9][2]++; break;
+				case 3: heatmap[9][3]++; break;
+				case 4: heatmap[9][4]++; break;
+				case 5: heatmap[9][5]++; break;
+				case 6: heatmap[9][6]++; break;
+				case 7: heatmap[9][7]++; break;
+				case 8: heatmap[9][8]++; break;
+				case 9: heatmap[9][9]++; break;
+				case 10: heatmap[9][10]++; break;
+				case 11: heatmap[9][11]++; break;
+				case 12: heatmap[9][12]++; break;
+				case 13: heatmap[9][13]++; break;
+				case 14: heatmap[9][14]++; break;
+				default: ;
+			}
+		} else if (-3.6f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -4.8f) {
+			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
+			{
+				case 0: heatmap[10][0]++; break;
+				case 1: heatmap[10][1]++; break;
+				case 2: heatmap[10][2]++; break;
+				case 3: heatmap[10][3]++; break;
+				case 4: heatmap[10][4]++; break;
+				case 5: heatmap[10][5]++; break;
+				case 6: heatmap[10][6]++; break;
+				case 7: heatmap[10][7]++; break;
+				case 8: heatmap[10][8]++; break;
+				case 9: heatmap[10][9]++; break;
+				case 10: heatmap[10][10]++; break;
+				case 11: heatmap[10][11]++; break;
+				case 12: heatmap[10][12]++; break;
+				case 13: heatmap[10][13]++; break;
+				case 14: heatmap[10][14]++; break;
+				default: ;
+			}
+		} else if (-4.8f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -6.0f) {
+			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
+			{
+				case 0: heatmap[11][0]++; break;
+				case 1: heatmap[11][1]++; break;
+				case 2: heatmap[11][2]++; break;
+				case 3: heatmap[11][3]++; break;
+				case 4: heatmap[11][4]++; break;
+				case 5: heatmap[11][5]++; break;
+				case 6: heatmap[11][6]++; break;
+				case 7: heatmap[11][7]++; break;
+				case 8: heatmap[11][8]++; break;
+				case 9: heatmap[11][9]++; break;
+				case 10: heatmap[11][10]++; break;
+				case 11: heatmap[11][11]++; break;
+				case 12: heatmap[11][12]++; break;
+				case 13: heatmap[11][13]++; break;
+				case 14: heatmap[11][14]++; break;
+				default: ;
+			}
+		} else if (-6.0f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -7.2f) {
+			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
+			{
+				case 0: heatmap[12][0]++; break;
+				case 1: heatmap[12][1]++; break;
+				case 2: heatmap[12][2]++; break;
+				case 3: heatmap[12][3]++; break;
+				case 4: heatmap[12][4]++; break;
+				case 5: heatmap[12][5]++; break;
+				case 6: heatmap[12][6]++; break;
+				case 7: heatmap[12][7]++; break;
+				case 8: heatmap[12][8]++; break;
+				case 9: heatmap[12][9]++; break;
+				case 10: heatmap[12][10]++; break;
+				case 11: heatmap[12][11]++; break;
+				case 12: heatmap[12][12]++; break;
+				case 13: heatmap[12][13]++; break;
+				case 14: heatmap[12][14]++; break;
+				default: ;
+			}
+		} else if (-7.2f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -8.4f) {
+			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
+			{
+				case 0: heatmap[13][0]++; break;
+				case 1: heatmap[13][1]++; break;
+				case 2: heatmap[13][2]++; break;
+				case 3: heatmap[13][3]++; break;
+				case 4: heatmap[13][4]++; break;
+				case 5: heatmap[13][5]++; break;
+				case 6: heatmap[13][6]++; break;
+				case 7: heatmap[13][7]++; break;
+				case 8: heatmap[13][8]++; break;
+				case 9: heatmap[13][9]++; break;
+				case 10: heatmap[13][10]++; break;
+				case 11: heatmap[13][11]++; break;
+				case 12: heatmap[13][12]++; break;
+				case 13: heatmap[13][13]++; break;
+				case 14: heatmap[13][14]++; break;
+				default: ;
+			}
 		}
 	}
 	
