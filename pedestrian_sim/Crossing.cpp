@@ -172,7 +172,7 @@ float buff_sort[42][2] = {{0.0, -6.3}, {0.5, -5.8}, {-0.5, -5.8}, {-0.1, -5.2}, 
 						{-1.0, 1.8}, {1.0, 2.0}, {0.1, 2.1}, {-0.8, 2.5}, {0.6, 2.7}, {-0.2, 3.1}, 
 						{-0.8, 3.5}, {0.8, 3.6}, {-0.4, 4.1}, {1.1, 4.3}, {0.4, 4.4}, {1.1, 4.6}, 
 						{-1.1, 4.7}, {-0.4, 5.0}, {0.6, 5.1}, {0.0, 6.0}, {0.7, 6.0}, {-0.6, 6.4}};
-int heatmap[14][15] = {{0}};
+int heatmap[12][15] = {{0}};
 struct agt_fromL
 {
 	int hurry;
@@ -599,7 +599,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 
 	/* Store utilization data */
 	for (size_t i = 0; i < sim->getNumAgents(); i++) {
-		if (8.4f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 7.2f) {
+		if (7.2f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 6.0f) {
 			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
 			{
 				case 0: heatmap[0][0]++; break;
@@ -619,7 +619,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				case 14: heatmap[0][14]++; break;
 				default: ;
 			}
-		} else if (7.2f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 6.0f) {
+		} else if (6.0f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 4.8f) {
 			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
 			{
 				case 0: heatmap[1][0]++; break;
@@ -639,7 +639,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				case 14: heatmap[1][14]++; break;
 				default: ;
 			}
-		} else if (6.0f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 4.8f) {
+		} else if (4.8f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 3.6f) {
 			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
 			{
 				case 0: heatmap[2][0]++; break;
@@ -659,7 +659,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				case 14: heatmap[2][14]++; break;
 				default: ;
 			}
-		} else if (4.8f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 3.6f) {
+		} else if (3.6f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 2.4f) {
 			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
 			{
 				case 0: heatmap[3][0]++; break;
@@ -679,7 +679,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				case 14: heatmap[3][14]++; break;
 				default: ;
 			}
-		} else if (3.6f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 2.4f) {
+		} else if (2.4f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 1.2f) {
 			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
 			{
 				case 0: heatmap[4][0]++; break;
@@ -699,7 +699,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				case 14: heatmap[4][14]++; break;
 				default: ;
 			}
-		} else if (2.4f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 1.2f) {
+		} else if (1.2f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 0.0f) {
 			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
 			{
 				case 0: heatmap[5][0]++; break;
@@ -719,7 +719,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				case 14: heatmap[5][14]++; break;
 				default: ;
 			}
-		} else if (1.2f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > 0.0f) {
+		} else if (0.0f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -1.2f) {
 			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
 			{
 				case 0: heatmap[6][0]++; break;
@@ -739,7 +739,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				case 14: heatmap[6][14]++; break;
 				default: ;
 			}
-		} else if (0.0f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -1.2f) {
+		} else if (-1.2f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -2.4f) {
 			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
 			{
 				case 0: heatmap[7][0]++; break;
@@ -759,7 +759,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				case 14: heatmap[7][14]++; break;
 				default: ;
 			}
-		} else if (-1.2f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -2.4f) {
+		} else if (-2.4f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -3.6f) {
 			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
 			{
 				case 0: heatmap[8][0]++; break;
@@ -779,7 +779,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				case 14: heatmap[8][14]++; break;
 				default: ;
 			}
-		} else if (-2.4f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -3.6f) {
+		} else if (-3.6f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -4.8f) {
 			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
 			{
 				case 0: heatmap[9][0]++; break;
@@ -799,7 +799,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				case 14: heatmap[9][14]++; break;
 				default: ;
 			}
-		} else if (-3.6f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -4.8f) {
+		} else if (-4.8f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -6.0f) {
 			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
 			{
 				case 0: heatmap[10][0]++; break;
@@ -819,7 +819,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				case 14: heatmap[10][14]++; break;
 				default: ;
 			}
-		} else if (-4.8f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -6.0f) {
+		} else if (-6.0f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -7.2f) {
 			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
 			{
 				case 0: heatmap[11][0]++; break;
@@ -837,46 +837,6 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				case 12: heatmap[11][12]++; break;
 				case 13: heatmap[11][13]++; break;
 				case 14: heatmap[11][14]++; break;
-				default: ;
-			}
-		} else if (-6.0f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -7.2f) {
-			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
-			{
-				case 0: heatmap[12][0]++; break;
-				case 1: heatmap[12][1]++; break;
-				case 2: heatmap[12][2]++; break;
-				case 3: heatmap[12][3]++; break;
-				case 4: heatmap[12][4]++; break;
-				case 5: heatmap[12][5]++; break;
-				case 6: heatmap[12][6]++; break;
-				case 7: heatmap[12][7]++; break;
-				case 8: heatmap[12][8]++; break;
-				case 9: heatmap[12][9]++; break;
-				case 10: heatmap[12][10]++; break;
-				case 11: heatmap[12][11]++; break;
-				case 12: heatmap[12][12]++; break;
-				case 13: heatmap[12][13]++; break;
-				case 14: heatmap[12][14]++; break;
-				default: ;
-			}
-		} else if (-7.2f >= sim->getAgentPosition(i).y() && sim->getAgentPosition(i).y() > -8.4f) {
-			switch (int(sim->getAgentPosition(i).x()/1.2f+9))
-			{
-				case 0: heatmap[13][0]++; break;
-				case 1: heatmap[13][1]++; break;
-				case 2: heatmap[13][2]++; break;
-				case 3: heatmap[13][3]++; break;
-				case 4: heatmap[13][4]++; break;
-				case 5: heatmap[13][5]++; break;
-				case 6: heatmap[13][6]++; break;
-				case 7: heatmap[13][7]++; break;
-				case 8: heatmap[13][8]++; break;
-				case 9: heatmap[13][9]++; break;
-				case 10: heatmap[13][10]++; break;
-				case 11: heatmap[13][11]++; break;
-				case 12: heatmap[13][12]++; break;
-				case 13: heatmap[13][13]++; break;
-				case 14: heatmap[13][14]++; break;
 				default: ;
 			}
 		}
@@ -1071,28 +1031,39 @@ void statistics() {
 	// std::cout << illegal_statistics << std::endl;
 
 	/* utilizationn statistics. */
-	json heatmap_data;
+	json heatmap_main;
+	json heatmap_buf;
 	for(int j = 0; j < 15; j++) {
-		json this_column;
-		this_column["column"] = j;
+		json column_main;
+		json column_buf;
+		column_main["column"] = j;
 		if (j == 8 || j == 9) {
-			for (int i = 0; i < 14; i++) {
-				this_column["bins"].push_back({
+			for (int i = 11; i >= 0; i--) {
+				column_main["bins"].push_back({
+					{"type", "Buffer Zone"},
+					{"count", 0}
+				});
+			}
+			for (int i = 11; i >= 0; i--) {
+				column_buf["bins"].push_back({
 					{"type", "Buffer Zone"},
 					{"count", heatmap[i][j]}
 				});
 			}
+			column_buf["column"] = j;
+			heatmap_buf.push_back(column_buf);
 		} else {
-			for (int i = 0; i < 14; i++) {
-				this_column["bins"].push_back({
+			for (int i = 11; i >= 0; i--) {
+				column_main["bins"].push_back({
 					{"type", "Road"},
 					{"count", heatmap[i][j]}
 				});
 			}
 		}
-		heatmap_data.push_back(this_column);
+		heatmap_main.push_back(column_main);
 	}
-	std::cout << heatmap_data << std::endl;
+	// std::cout << heatmap_main << std::endl;
+	// std::cout << heatmap_buf << std::endl;
 }
 
 bool timeUp(RVO::RVOSimulator *sim)
