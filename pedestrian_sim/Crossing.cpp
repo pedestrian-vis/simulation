@@ -72,6 +72,7 @@ int getThreRight(int t, int hurry);
 int illegalR = 0; // right road segment, including both directions
 int illegalL = 0; // left road segment, including both directions
 int illegal_statistics = 0; // total number of illegal occurrence
+int cross_statistics = 0; // clear to zero every 4 seconds
 // seqR, seqL, nLeft, and nRight are the only stuff need adjusting when flow rate changes
 // seqR, seqL format: {hurryLevel, timeAppear}
 int seqR[nRight][2] = {{8, 0}, {7, 30}, {6, 60}, {1, 90}, {8, 120}, {3, 150}, {2, 180}, {8, 210}, {4, 240}, {4, 270},
@@ -173,6 +174,7 @@ float buff_sort[42][2] = {{0.0, -6.3}, {0.5, -5.8}, {-0.5, -5.8}, {-0.1, -5.2}, 
 						{-0.8, 3.5}, {0.8, 3.6}, {-0.4, 4.1}, {1.1, 4.3}, {0.4, 4.4}, {1.1, 4.6}, 
 						{-1.1, 4.7}, {-0.4, 5.0}, {0.6, 5.1}, {0.0, 6.0}, {0.7, 6.0}, {-0.6, 6.4}};
 int heatmap[12][15] = {{0}};
+int cross_array[24] = {0};
 struct agt_fromL
 {
 	int hurry;
@@ -392,6 +394,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				agt_fromL[i].waitingL = false;
 				agt_fromL[i].running_fromL = true;
 				if (sim->getGlobalTime() < 1800) { illegal_statistics++; }
+				cross_statistics++;
 			}
 		}
 	}
@@ -419,6 +422,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				agt_fromR[i].waitingR = false;
 				agt_fromR[i].running_fromR = true;
 				if (sim->getGlobalTime() < 1800) { illegal_statistics++; }
+				cross_statistics++;
 			}
 		}
 	}
@@ -482,7 +486,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 		}
 	}
 
-	/* Reach buffer reset state- from left */
+	/* Reach buffer reset state - from left */
 	for (int i = 0; i < nLeft; i++) {
 		if (agt_fromL[i].running_fromL) {
 			if (RVO::absSq(sim->getAgentPosition(i) - goals[i]) <= sim->getAgentRadius(i) * sim->getAgentRadius(i)) {
@@ -493,7 +497,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			}
 		}
 	}
-	//* Reach buffer reset state- from right */
+	//* Reach buffer reset state - from right */
 	for (int i = 0; i < nRight; i++) {
 		if (agt_fromR[i].running_fromR) {
 			if (RVO::absSq(sim->getAgentPosition(i) - goals[i]) <= sim->getAgentRadius(i) * sim->getAgentRadius(i)) {
@@ -521,6 +525,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				agt_fromR[i].waiting_buf = false;
 				agt_fromR[i].running_from_buf = true;
 				if (sim->getGlobalTime() < 1800) { illegal_statistics++; }
+				cross_statistics++;
 			}
 		}
 	}
@@ -547,12 +552,14 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 				agt_fromL[i].waiting_buf = false;
 				agt_fromL[i].running_from_buf = true;
 				if (sim->getGlobalTime() < 1800) { illegal_statistics++; }
+				cross_statistics++;
 			}
 		}
 	}
 
 	/* Light green - from left */
 	for (int i = 0; i < nLeft; i++) {
+		if (agt_fromL[i].waitingL && (sim->getGlobalTime() > 1800)) { cross_statistics++; }
 		// the agents waiting at the left side
 		if ((agt_fromL[i].waitingL || agt_fromL[i].running_fromL) && (sim->getGlobalTime() > 1800)) {
 			goals[agt_fromL[i].sim_index] = RVO::Vector2(agt_fromL[i].goal_x, agt_fromL[i].goal_y);
@@ -562,10 +569,12 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 		if ((agt_fromL[i].waiting_buf) && (sim->getGlobalTime() > 1800)) {
 			goals[agt_fromL[i].sim_index] = RVO::Vector2(agt_fromL[i].goal_x, agt_fromL[i].goal_y);
 			agt_fromL[i].waiting_buf = false;
+			cross_statistics++;
 		}
 	}
 	/* Light green - from right */
 	for (int i = 0; i < nRight; i++) {
+		if (agt_fromR[i].waitingR && (sim->getGlobalTime() > 1800)) { cross_statistics++; }
 		// the agents waiting at the right side
 		if ((agt_fromR[i].waitingR || agt_fromR[i].running_fromR) && (sim->getGlobalTime() > 1800)) {
 			goals[agt_fromR[i].sim_index] = RVO::Vector2(agt_fromR[i].goal_x, agt_fromR[i].goal_y);
@@ -575,6 +584,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 		if ((agt_fromR[i].waiting_buf) && (sim->getGlobalTime() > 1800)) {
 			goals[agt_fromR[i].sim_index] = RVO::Vector2(agt_fromR[i].goal_x, agt_fromR[i].goal_y);
 			agt_fromR[i].waiting_buf = false;
+			cross_statistics++;
 		}
 	}
 
@@ -594,6 +604,25 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 			goals[agt_fromR[i].sim_index].y() == agt_fromR[i].goal_y) {
 				sim->setAgentPosition(agt_fromR[i].sim_index, RVO::Vector2(100.0f, 100.0f));
 				sim->setAgentMaxSpeed(agt_fromR[i].sim_index, 0.0f);
+		}
+	}
+
+	/* Store crossing frequency data every 4 seconds */
+	if (sim->getGlobalTime() == 60) { cross_statistics = 0; } // init: start counting from 2s
+	if (sim->getGlobalTime() > 60 && sim->getGlobalTime() < 900) { // 2-30s
+		if ((sim->getGlobalTime()-60)/30==int((sim->getGlobalTime()-60)/30) && int((sim->getGlobalTime()-60)/30) % 4 == 0) {
+			cross_array[int((sim->getGlobalTime()-60)/30)/4-1] = cross_statistics;
+			cross_statistics = 0;
+		}
+	} else if (sim->getGlobalTime() >= 900 && sim->getGlobalTime() < 1050) { // 30-50 accelerated
+		if ((sim->getGlobalTime()-900)/30==int((sim->getGlobalTime()-900)/30)) {
+			cross_array[int((sim->getGlobalTime()-900)/30)+6] = cross_statistics;
+			cross_statistics = 0;
+		}
+	} else if (sim->getGlobalTime() >= 1050) { // 50-100s
+		if ((sim->getGlobalTime()-1050)/30==int((sim->getGlobalTime()-1050)/30) && int((sim->getGlobalTime()-1050)/30) % 4 == 0) {
+			cross_array[int((sim->getGlobalTime()-900)/30)/4+10] = cross_statistics;
+			cross_statistics = 0;
 		}
 	}
 
@@ -1030,7 +1059,7 @@ void statistics() {
 	/* illegal - flow rate statistics. */
 	// std::cout << illegal_statistics << std::endl;
 
-	/* utilizationn statistics. */
+	/* utilization statistics. */
 	json heatmap_main;
 	json heatmap_buf;
 	for(int j = 0; j < 15; j++) {
@@ -1064,6 +1093,16 @@ void statistics() {
 	}
 	// std::cout << heatmap_main << std::endl;
 	// std::cout << heatmap_buf << std::endl;
+
+	/* crossing frequency statistics. */
+	// json cross_frequency;
+	// for (int i = 0; i < 24; i++) {
+	// 	cross_frequency.push_back({
+	// 		{"second", 4*i+6},
+	// 		{"crossings", cross_array[i]}
+	// 	});
+	// }
+	// std::cout << cross_frequency << std::endl;
 }
 
 bool timeUp(RVO::RVOSimulator *sim)
