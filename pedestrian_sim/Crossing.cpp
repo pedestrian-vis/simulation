@@ -428,7 +428,7 @@ void thesisManipulation(RVO::RVOSimulator *sim)
 	}
 	/* Goals at buffer avoid overlapping */
 	for (size_t i = 0; i < sim->getNumAgents(); i++) {
-		if (-1.8f < sim->getAgentPosition(i).x() && sim->getAgentPosition(i).x() < 1.8f) {
+		if (-3.0f < sim->getAgentPosition(i).x() && sim->getAgentPosition(i).x() < 3.0f) {
 			for (size_t j = 0; j < sim->getNumAgents(); j++) {
 				if (i != j && goals[i].x() == sim->getAgentPosition(j).x() && goals[i].y() == sim->getAgentPosition(j).y()) {
 					for (int m = 0; m < 42; m++) {
