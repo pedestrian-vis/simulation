@@ -42,10 +42,6 @@ PROGRAMS = Blocks Circle Roadmap
 
 all: $(PROGRAMS)
 
-Circle: Circle.o
-	$(RM) Circle
-	$(CXX) $(INCLUDES) $(CXXFLAGS) -o $@ Circle.o $(LIBS)
-
 Crossing: Crossing.o
 	$(RM) Crossing
 	$(CXX) $(INCLUDES) $(CXXFLAGS) -o $@ Crossing.o $(LIBS)

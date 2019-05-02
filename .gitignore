@@ -17,3 +17,5 @@
 /pedestrian_sim/run
 .vscode/
 /pedestrian_sim/Crossing
+*.vc*
+*.xcodeproj
